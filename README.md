@@ -10,3 +10,4 @@ deno run --allow-net --allow-read --watch server.js
 inputが空白の時、送信できないようにした
 ゲーム終了時に送信ボタンを押せないようにした
 リセットボタンを追加した
+ENTERで送信できるようにした
