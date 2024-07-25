@@ -41,6 +41,9 @@ const sendWord = async () => {
 	const previousWord = await response.text();
 	const paragraph = document.querySelector("#previousWord");
 	paragraph.innerHTML = `前の単語: ${previousWord}`;
+
+	//頭文字の挿入
+	addInirialLetter(previousWord);
 }
 
 // 送信ボタンをクリックしたとき
