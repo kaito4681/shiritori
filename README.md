@@ -4,7 +4,7 @@
 https://shiritori-deno.deno.dev
 
 実行方法
-deno run --allow-net --allow-read --watch server.js        
+deno run --allow-net --allow-read --watch --allow-env server.js        
   
 実装したこと
 inputが空白の時、送信できないようにした
@@ -12,6 +12,8 @@ inputが空白の時、送信できないようにした
 リセットボタンを追加した
 ENTERで送信できるようにした
 頭文字の自動挿入
+存在する単語かを確認
+
 
 
 参考文献
@@ -19,3 +21,11 @@ ENTERで送信できるようにした
 ひらがなかチェック
 https://058.jp/javascript/?p=107　
 
+辞書API
+https://github.com/mistval/unofficial-jisho-api
+
+denoでnpm
+https://docs.deno.com/runtime/manual/node/npm_specifiers/
+
+カタカナからひらがなに変換
+https://qiita.com/mimoe/items/855c112625d39b066c9a

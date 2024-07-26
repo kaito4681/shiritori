@@ -1,7 +1,9 @@
 import { serveDir } from "https://deno.land/std@0.223.0/http/file_server.ts";
+import JishoAPI from "npm:unofficial-jisho-api@2.3.4";
 
 let previousWord = "しりとり";
 let wordHistories = new Set(["しりとり"]);
+const jisho = new JishoAPI();
 
 Deno.serve(async (request) => {
 	const pathname = new URL(request.url).pathname;
@@ -74,6 +76,24 @@ Deno.serve(async (request) => {
 			)
 		}
 
+
+		// 実在する単語ではない時
+		const result = await jisho.searchForPhrase(nextWord);
+		// console.log(result);
+		const wordExists = isValidWord(nextWord, result);
+		if (!wordExists) {
+			return new Response(
+				JSON.stringify({
+					"errorMessage": `${nextWord} は実在する単語ではありません。`,
+					"errorCode": "10003"
+				}),
+				{
+					status: 400,
+					headers: { "Content-Type": "application/json; charset=utf-8" }
+				}
+			);
+		}
+
 		//エラーなしの時
 		wordHistories.add(nextWord);
 		previousWord = nextWord;
@@ -107,3 +127,21 @@ Deno.serve(async (request) => {
 	)
 
 });
+
+// nextWordが実在する単語か判定する関数
+function isValidWord(nextWord, result) {
+	// 結果データの中から単語をチェック
+	return result.data.some(entry =>
+		entry.japanese.some(wordEntry =>
+			toHiragana(wordEntry.reading) === nextWord
+		)
+	);
+}
+
+// カタカナをひらがなに変換する関数
+function toHiragana(str) {
+    return str.replace(/[ァ-ン]/g, function(ch) {
+		// ひらがなにずらす
+        return String.fromCharCode(ch.charCodeAt(0) - 0x60);
+    });
+}
