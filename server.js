@@ -15,43 +15,57 @@ Deno.serve(async (request) => {
 	//POST previousWord
 	if (request.method === "POST" && pathname === "/shiritori") {
 		const requestJson = await request.json();
-		const nextWord = requestJson["nextWord"];
+		const nextWord = requestJson["nextWord"]
 
-		// previousWordの末尾とnextWordの先頭が同一か確認
-		if (previousWord.slice(-1) === nextWord.slice(0, 1)) {
-			//最後の文字が「ん」の時
-			if (nextWord.slice(-1) === "ん") {
-				return new Response(
-					JSON.stringify({
-						"errorMessage": "最後の文字が「ん」になっています。",
-						"errorCode": "10002"
-					}),
-					{
-						status: 400,
-						headers: { "Content-Type": "application/json; charset=utf-8" }
-					}
-				)
-			} else if (wordHistories.has(nextWord)) {//過去に入力された単語の場合
-				return new Response(
-					JSON.stringify({
-						"errorMessage": "過去に入力した単語が入力されました。",
-						"errorCode": "10003"
-					}),
-					{
-						status: 400,
-						headers: { "Content-Type": "application/json; charset=utf-8" }
-					}
-				)
-			} else {
-				wordHistories.add(nextWord);
-				previousWord = nextWord;
-			}
-		} else {
-			//前の単語につづいていない時
+		//ひらがな以外が入力されたとき
+		if (!/^[ぁ-んー]*$/.test(nextWord)) {
+			return new Response(
+				JSON.stringify({
+					"errorMessage": "ひらがな以外が入力されています。ひらがなのみに変更してください。",
+					"errorCode": "10001"
+				}),
+				{
+					status: 400,
+					headers: { "Content-Type": "application/json; charset=utf-8" }
+				}
+			);
+		}
+
+		// 	前のワードに繋がっていないとき
+		if (previousWord.slice(-1) !== nextWord.slice(0, 1)) {
 			return new Response(
 				JSON.stringify({
 					"errorMessage": "前の単語に続いていません",
-					"errorCode": "10001"
+					"errorCode": "10002"
+				}),
+				{
+					status: 400,
+					headers: { "Content-Type": "application/json; charset=utf-8" }
+				}
+			);
+		}
+
+
+		//最後の文字が「ん」の時
+		if (nextWord.slice(-1) === "ん") {
+			return new Response(
+				JSON.stringify({
+					"errorMessage": "最後の文字が「ん」になっています。",
+					"errorCode": "20001"
+				}),
+				{
+					status: 400,
+					headers: { "Content-Type": "application/json; charset=utf-8" }
+				}
+			)
+		}
+
+		//過去ににゅ力された単語のとき
+		if (wordHistories.has(nextWord)) {
+			return new Response(
+				JSON.stringify({
+					"errorMessage": "過去に入力した単語が入力されました。",
+					"errorCode": "20002"
 				}),
 				{
 					status: 400,
@@ -61,6 +75,8 @@ Deno.serve(async (request) => {
 		}
 
 		//エラーなしの時
+		wordHistories.add(nextWord);
+		previousWord = nextWord;
 		return new Response(previousWord, {
 			headers: { "Content-Type": "text/plain; charset=utf-8" }
 		});

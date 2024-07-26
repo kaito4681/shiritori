@@ -1,5 +1,4 @@
-// リセットボタン
-document.querySelector("#resetButton").onclick = async (_event) => {
+const reset = async () => {
 	if (!confirm("ゲームをリセットします。")) {
 		return;
 	}
@@ -28,4 +27,20 @@ document.querySelector("#resetButton").onclick = async (_event) => {
 	document.querySelector("#nextWordInput").value = "";
 	const sendButton = document.querySelector("#nextWordSendButton");
 	sendButton.disabled = false;
+
+	//頭文字の挿入
+	addInirialLetter(previousWord);
 }
+
+
+// リセットボタン
+document.querySelector("#resetButton").onclick = reset;
+
+
+//送信ボタンが押しない時にENTERを押すとRESET
+document.querySelector("#nextWordInput").addEventListener("keydown", (event) => {
+	const sendButton = document.querySelector("#nextWordSendButton");
+	if (sendButton.disabled && event.key === "Enter") {
+		reset();
+	}
+});

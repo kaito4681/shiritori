@@ -1,4 +1,3 @@
-
 // 送信処理
 const sendWord = async () => {
 	// Inputタグの中のテキストを取得
@@ -20,21 +19,21 @@ const sendWord = async () => {
 		}
 	);
 
-	// Inputタグの中を空にする
-	nextWordInput.value = "";
-
 	// エラー処理
 	if (response.status !== 200) {
 		const errorJson = await response.text();
 		const errorObj = JSON.parse(errorJson);
 		let message = errorObj["errorMessage"];
-		if (errorObj["errorCode"] === "10002") {
-			message += "\nあなたの負けです。\nもう一度最初からするにはリセットボタンを押してください。";
+		if (errorObj["errorCode"].slice(0, 1) === "2") {
 			const sendButton = document.querySelector("#nextWordSendButton");
 			sendButton.disabled = true;
+			message += "\nあなたの負けです。\nもう一度最初からするにはリセットボタンをクリックするか、ENTERを2回押してください。";
 		}
+
 		alert(message);
+		addInirialLetter(previousWord);
 		return;
+
 	}
 
 	// previousWord の更新

@@ -1,3 +1,7 @@
-body{
+body {
 	background: skyblue;
+}
+
+#nextWordInput {
+	ime-mode: active;
 }
