@@ -37,10 +37,13 @@ const reset = async () => {
 document.querySelector("#resetButton").onclick = reset;
 
 
-//送信ボタンが押しない時にENTERを押すとRESET
-document.querySelector("#nextWordInput").addEventListener("keydown", (event) => {
+//ESCを押すとRESET
+document.querySelector("body").addEventListener("keydown", (event) => {
 	const sendButton = document.querySelector("#nextWordSendButton");
-	if (sendButton.disabled && event.key === "Enter") {
+	if (sendButton.disabled) {
+		return;
+	}
+	if (event.key === "Escape") {
 		reset();
 	}
 });

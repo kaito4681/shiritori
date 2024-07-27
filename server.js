@@ -79,7 +79,8 @@ Deno.serve(async (request) => {
 
 		// 実在する単語ではない時
 		const result = await jisho.searchForPhrase(nextWord);
-		// console.log(result);
+		console.log(nextWord);
+		console.log(result);
 		const wordExists = isValidWord(nextWord, result);
 		if (!wordExists) {
 			return new Response(
@@ -127,6 +128,8 @@ Deno.serve(async (request) => {
 	)
 
 });
+
+
 
 // nextWordが実在する単語か判定する関数
 function isValidWord(nextWord, result) {

@@ -4,10 +4,13 @@ const sendWord = async () => {
 	const nextWordInput = document.querySelector("#nextWordInput");
 	const nextWordInputText = nextWordInput.value;
 
-	if (nextWordInputText.trim() === "") {
-		// alert("単語を入力してください。");
+	if (nextWordInputText === "") {
 		return;
 	}
+
+	//sendButtonを一旦オフにする
+	const sendButton = document.querySelector("#nextWordSendButton");
+	sendButton.disabled = true;
 
 	// POST
 	const response = await fetch(
@@ -24,15 +27,23 @@ const sendWord = async () => {
 		const errorJson = await response.text();
 		const errorObj = JSON.parse(errorJson);
 		let message = errorObj["errorMessage"];
-		if (errorObj["errorCode"].slice(0, 1) === "2") {
-			const sendButton = document.querySelector("#nextWordSendButton");
-			sendButton.disabled = true;
-			message += "\nあなたの負けです。\nもう一度最初からするにはリセットボタンをクリックするか、ENTERを2回押してください。";
-		}
 
-		alert(message);
-		addInirialLetter(previousWord);
-		return;
+		//ゲーム終了にする時
+		if (errorObj["errorCode"].slice(0, 1) === "2") {
+			sendButton.disabled = true;
+			message += "あなたの負けです。\nもう一度最初からしますか？";
+			if (confirm(message)) {
+				reset();
+			}
+			return;
+
+		} else {
+			// ゲームを続ける時
+			message += "\n送信する単語を変更してください。";
+			sendButton.disabled = false;
+			alert(message);
+			return;
+		}
 
 	}
 
@@ -43,14 +54,19 @@ const sendWord = async () => {
 
 	//頭文字の挿入
 	addInirialLetter(previousWord);
+
+	// ボタンを有効にする
+	sendButton.disabled = false;
 }
 
 // 送信ボタンをクリックしたとき
-document.querySelector("#nextWordSendButton").onclick = sendWord();
+document.querySelector("#nextWordSendButton").onclick = sendWord;
 
 // 入力後にEnterを押したとき
 document.querySelector("#nextWordInput").addEventListener("keydown", (event) => {
-	if (event.key === "Enter") {
+	const sendButton = document.querySelector("#nextWordSendButton");
+
+	if (event.key === "Enter" && !sendButton.disabled) {
 		if (event.isComposing || event.keyCode === 229) {
 			// 変換中の場合は送信しない
 			return;
@@ -60,4 +76,3 @@ document.querySelector("#nextWordInput").addEventListener("keydown", (event) => 
 		sendWord();
 	}
 });
-
