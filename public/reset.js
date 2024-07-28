@@ -4,7 +4,7 @@ const reset = async () => {
 	}
 
 	// UUIDをセッションストレージから取得
-	const uuid = sessionStorage.getItem("uuid");
+	let uuid = sessionStorage.getItem("uuid");
 
 	// サーバーにリセットリクエストを送信
 	const response = await fetch(
@@ -12,19 +12,27 @@ const reset = async () => {
 		{
 			method: "POST",
 			headers: {
-				 "Content-Type": "application/json", 
+				"Content-Type": "application/json",
 				"UUID": uuid
-		},
+			},
 		}
 	);
 
 	if (response.status !== 200) {
-		alert("リセットに失敗しました。");
-		return;
+		const errorJson = await response.text();
+		const errorObj = JSON.parse(errorJson);
+		if (errorObj["errorCode"].slice(0, 1) === "3") {
+			uuid = await getUUID();
+		} else {
+			const message = errorObj["errorMessage"];
+			alert("リセットに失敗しました。\n", message);
+			return;
+		}
 	}
 
+
 	// 前のワードを取得,置き換え
-	const previousWordResponse = await fetch("/shiritori", { 
+	const previousWordResponse = await fetch("/shiritori", {
 		method: "GET",
 		headers: {
 			"UUID": uuid // UUIDをヘッダーに追加

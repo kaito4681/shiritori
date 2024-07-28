@@ -21,9 +21,9 @@ const sendWord = async () => {
 		{
 			method: "POST",
 			headers: {
-				 "Content-Type": "application/json",
-				 "UUID": uuid
-			 },
+				"Content-Type": "application/json",
+				"UUID": uuid
+			},
 			body: JSON.stringify({ nextWord: nextWordInputText })
 		}
 	);
@@ -32,25 +32,32 @@ const sendWord = async () => {
 	if (response.status !== 200) {
 		const errorJson = await response.text();
 		const errorObj = JSON.parse(errorJson);
-		let message = errorObj["errorMessage"];
+		const message = errorObj["errorMessage"];
 
 		//ゲーム終了にする時
-		if (errorObj["errorCode"].slice(0, 1) === "2") {
-			sendButton.disabled = true;
-			message += "あなたの負けです。\nもう一度最初からしますか？";
-			if (confirm(message)) {
-				reset();
-			}
-			return;
-
-		} else {
+		switch (errorObj["errorCode"].slice(0, 1)) {
 			// ゲームを続ける時
-			message += "\n送信する単語を変更してください。";
-			sendButton.disabled = false;
-			alert(message);
-			return;
-		}
+			case "1": {
+				sendButton.disabled = false;
+				alert(message + "\n送信する単語を変更してください。");
+				return;
+			}
 
+			//ゲームを終了するとき
+			case "2": {
+				if (confirm(message + "\nあなたの負けです。\nもう一度最初からしますか？")) {
+					reset();
+				}
+				return;
+			}
+
+			// UUIDのエラー
+			case "3":
+				alert(message + "\nゲームをリセットします");
+				await getUUID();
+				await reset();
+				return;
+		}
 	}
 
 	// previousWord の更新

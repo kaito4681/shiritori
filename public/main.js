@@ -6,12 +6,34 @@ onload = async (_event) => {
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
-	const response = await fetch("/shiritori", {
+	let response = await fetch("/shiritori", {
 		method: "GET",
 		headers: {
 			"UUID": uuid
 		}
 	});
+
+	// エラー処理
+	if (response.status !== 200) {
+		const errorJson = await response.text();
+		const errorObj = JSON.parse(errorJson);
+		if (errorObj["errorCode"].slice(0, 1) === "3") {
+			uuid = await getUUID();
+			// 前のワードを取得
+			response = await fetch("/shiritori", {
+				method: "GET",
+				headers: {
+					"UUID": uuid
+				}
+			});
+		} else {
+			const message = errorObj["errorMessage"];
+			alert(message);
+			return;
+		}
+
+	}
+
 	const previousWord = await response.text();
 
 	// 前のワードの書き換え

@@ -4,8 +4,6 @@ import { v4 } from "https://deno.land/std@0.113.0/uuid/mod.ts";
 
 
 const wordMap = new Map();
-let previousWord;
-let wordHistories;
 const jisho = new JishoAPI();
 
 Deno.serve(async (request) => {
@@ -39,8 +37,8 @@ Deno.serve(async (request) => {
 	const uuid = request.headers.get("UUID");
 	console.log(`pathname: ${pathname}, UUID: ${uuid}`);
 
+	// 初回アクセス時
 	if (!uuid) {
-		// UUIDが存在しない場合はindex.htmlを返す
 		return serveDir(
 			request,
 			{
@@ -51,11 +49,12 @@ Deno.serve(async (request) => {
 		)
 	}
 
+	//サーバー再起動後初めてアクセス
 	if (!wordMap.has(uuid)) {
 		return new Response(
 			JSON.stringify({
-				"errorMessage": "UUIDが登録されていません。リロードしてください",
-				"errorCode": "20003"
+				"errorMessage": "UUIDが登録されていません。",
+				"errorCode": "30001"
 			}),
 			{
 				status: 400,
@@ -67,15 +66,10 @@ Deno.serve(async (request) => {
 	
 
 	const userData = wordMap.get(uuid);
-	previousWord = userData.previousWord;
-	wordHistories = userData.wordHistories;
-
-
-
-
+	
 	//GET previousWord
 	if (request.method === "GET" && pathname === "/shiritori") {
-		return new Response(previousWord);
+		return new Response(userData.previousWord);
 	}
 
 	//POST previousWord
@@ -98,7 +92,7 @@ Deno.serve(async (request) => {
 		}
 
 		// 	前のワードに繋がっていないとき
-		if (previousWord.slice(-1) !== nextWord.slice(0, 1)) {
+		if (userData.previousWord.slice(-1) !== nextWord.slice(0, 1)) {
 			return new Response(
 				JSON.stringify({
 					"errorMessage": "前の単語に続いていません",
@@ -127,7 +121,7 @@ Deno.serve(async (request) => {
 		}
 
 		//過去ににゅ力された単語のとき
-		if (wordHistories.has(nextWord)) {
+		if (userData.wordHistories.has(nextWord)) {
 			return new Response(
 				JSON.stringify({
 					"errorMessage": "過去に入力した単語が入力されました。",
@@ -160,9 +154,11 @@ Deno.serve(async (request) => {
 		}
 
 		//エラーなしの時
-		wordHistories.add(nextWord);
-		previousWord = nextWord;
-		return new Response(previousWord, {
+		userData.wordHistories.add(nextWord);
+		userData.previousWord = nextWord;
+		wordMap.set(uuid, userData);
+
+		return new Response(userData.previousWord, {
 			headers: { "Content-Type": "text/plain; charset=utf-8" }
 		});
 	}
@@ -170,8 +166,11 @@ Deno.serve(async (request) => {
 
 	//リセット
 	if (request.method === "POST" && pathname === "/reset") {
-		previousWord = "しりとり";
-		wordHistories = new Set(["しりとり"]);
+		
+		userData.previousWord = "しりとり";
+		userData.wordHistories = new Set(["しりとり"]);
+		wordMap.set(uuid,userData);
+
 		return new Response(
 			"リセットされました。",
 			{
