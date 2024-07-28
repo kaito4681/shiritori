@@ -14,10 +14,20 @@
 <body>
 	<h1>しりとりゲーム</h1>
 	<p id="previousWord"></p>
-	<p>ひらがなのみ送信可能です。</p>
 	<input id="nextWordInput" type="text">
 	<button id="nextWordSendButton">送信</button>
 	<button id="resetButton">リセット</button>
+
+	<div id="rule">
+		<h2>ルール</h2>
+		<ul>
+			<li>前の単語の最後の文字から始まる単語を入力する。</li>
+			<li>最後の文字が拗音・促音（ぁ、ぃ、ぅ、ぇ、ぉ、ゃ、ゅ、ょ、っ）などの小さい文字の場合、その文字を元の文字（あ、い、う、え、お、や、ゆ、よ）から始まる単語から始まる文字を入力する。</li>
+			<li>最後が「ー」のときは、その1つ前の文字から始まる単語を入力する</li>
+			<li>入力する単語は、すべてひらがなで入力する。</li>
+			<li>最後の文字が「ん」となる単語、または一度使用した単語を入力したら負けになる。</li>
+		</ul>
+	</div>
 </body>
 
 </html>

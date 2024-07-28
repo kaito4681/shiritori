@@ -17,6 +17,9 @@ input{
 	margin-right: 20px;
 }
 
+#previousWord{
+	font-size: 24px;
+}
 
 /* ボタン */
 button {
@@ -48,4 +51,17 @@ button {
 #resetButton:hover {
 	background-color: rgb(255,0, 0);
 } 
+
+/* ルール */
+#rule{
+	text-align: justify;
+	margin: 50px;
+	padding: 20px;
+	border-radius: 20px;
+	border: 3px solid white;
+}
+
+#rule>h2{
+	padding-left: 50px;
+}
 

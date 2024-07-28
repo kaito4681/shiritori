@@ -46,8 +46,28 @@ onload = async (_event) => {
 
 //頭文字の挿入
 function addInirialLetter(previousWord) {
+	// 最後が「ー」のとき
+	let prevWord = previousWord;
+	if (prevWord.slice(-1) === "ー") {
+		do {
+			prevWord = prevWord.slice(0, -1);
+			console.log(prevWord.slice(0, -1));
+		} while (prevWord.slice(-1) === "ー");
+	}
+	//最後が小さい文字のとき
+	let lastLetter = prevWord.slice(-1);
+	const smallLetter = new Map([
+		["ぁ", "あ"], ["ぃ", "い"], ["ぅ", "う"], ["ぇ", "え"], ["ぉ", "お"],
+		["ゃ", "や"], ["ゅ", "ゆ"], ["ょ", "よ"], ["っ", "つ"]
+	]);
+
+	if (smallLetter.has(lastLetter)) {
+		lastLetter = smallLetter.get(lastLetter);
+	}
+	
+	// inputに次の単語の頭文字を挿入
 	const nextWordInput = document.querySelector("#nextWordInput");
-	nextWordInput.value = previousWord.slice(-1);
+	nextWordInput.value = lastLetter;
 }
 
 async function getUUID() {

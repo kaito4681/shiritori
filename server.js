@@ -8,14 +8,14 @@ const jisho = new JishoAPI();
 
 Deno.serve(async (request) => {
 	const pathname = new URL(request.url).pathname;
-	
-	
+
+
 	// GET UUID
 	if (request.method === "GET" && pathname === "/getId") {
 		//UUIDの生成
 		const uuid = v4.generate();
 		console.log(`新しいUUID: ${uuid}`);
-		
+
 		//UUIDをMapに保存
 		wordMap.set(
 			uuid,
@@ -24,7 +24,7 @@ Deno.serve(async (request) => {
 				wordHistories: new Set(["しりとり"])
 			}
 		);
-		
+
 		return new Response(
 			uuid,
 			{
@@ -32,7 +32,7 @@ Deno.serve(async (request) => {
 			}
 		);
 	}
-	
+
 	//uuidの設定
 	const uuid = request.headers.get("UUID");
 	console.log(`pathname: ${pathname}, UUID: ${uuid}`);
@@ -53,7 +53,7 @@ Deno.serve(async (request) => {
 	if (!wordMap.has(uuid)) {
 		return new Response(
 			JSON.stringify({
-				"errorMessage": "UUIDが登録されていません。",
+				"errorMessage": "UUIDが正しくありません。ページを再読み込みしてください",
 				"errorCode": "30001"
 			}),
 			{
@@ -63,10 +63,10 @@ Deno.serve(async (request) => {
 		);
 	}
 
-	
+
 
 	const userData = wordMap.get(uuid);
-	
+
 	//GET previousWord
 	if (request.method === "GET" && pathname === "/shiritori") {
 		return new Response(userData.previousWord);
@@ -92,7 +92,26 @@ Deno.serve(async (request) => {
 		}
 
 		// 	前のワードに繋がっていないとき
-		if (userData.previousWord.slice(-1) !== nextWord.slice(0, 1)) {
+		// 最後が「ー」のとき
+		let prevWord = userData.previousWord;
+		if (prevWord.slice(-1) === "ー") {
+			do {
+				prevWord = prevWord.slice(0, -1);
+				console.log(prevWord.slice(0, -1));
+			} while (prevWord.slice(-1) === "ー");
+		}
+		//最後が小さい文字のとき
+		let lastLetter = prevWord.slice(-1);
+		const smallLetter = new Map([
+			["ぁ", "あ"], ["ぃ", "い"], ["ぅ", "う"], ["ぇ", "え"], ["ぉ", "お"],
+			["ゃ", "や"], ["ゅ", "ゆ"], ["ょ", "よ"], ["っ", "つ"]
+		]);
+		
+		if (smallLetter.has(lastLetter)) {
+			lastLetter = smallLetter.get(lastLetter);
+		}
+
+		if (lastLetter !== nextWord.slice(0, 1)) {
 			return new Response(
 				JSON.stringify({
 					"errorMessage": "前の単語に続いていません",
@@ -137,8 +156,7 @@ Deno.serve(async (request) => {
 
 		// 実在する単語ではない時
 		const result = await jisho.searchForPhrase(nextWord);
-		console.log(nextWord);
-		console.log(result);
+		// console.log(result);
 		const wordExists = isValidWord(nextWord, result);
 		if (!wordExists) {
 			return new Response(
@@ -166,10 +184,10 @@ Deno.serve(async (request) => {
 
 	//リセット
 	if (request.method === "POST" && pathname === "/reset") {
-		
+
 		userData.previousWord = "しりとり";
 		userData.wordHistories = new Set(["しりとり"]);
-		wordMap.set(uuid,userData);
+		wordMap.set(uuid, userData);
 
 		return new Response(
 			"リセットされました。",
