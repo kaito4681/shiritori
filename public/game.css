@@ -11,15 +11,7 @@ input {
 	font-size: 24px;
 }
 
-/* ボタン */
-button {
-	color: white;
-	padding: 10px 20px;
-	margin: 5px;
-	border: 1px;
-	border-radius: 5px;
-	font-size: 16px;
-}
+
 
 #nextWordSendButton {
 	background-color: rgb(0, 175, 0);
@@ -42,23 +34,3 @@ button {
 	background-color: rgb(255, 0, 0);
 }
 
-/* ルール */
-#rule {
-	text-align: justify;
-	margin: 50px;
-	padding: 20px;
-	border-radius: 20px;
-	border: 3px solid white;
-}
-
-#rule h3 {
-	padding: 0px, 0px, 0px, 0px;
-	font-size: 30px;
-	margin-bottom: 5px;
-	margin-top: 10px;
-	margin-left: 40px;
-}
-
-#rule ul {
-	margin-top: 10px;
-}

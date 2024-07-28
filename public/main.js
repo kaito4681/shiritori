@@ -105,3 +105,9 @@ function _resetCounter() {
 	const countText = document.querySelector("#counter");
 	countText.innerHTML = "続けた回数: 0回";
 }
+
+document.querySelector("#returnButton").addEventListener("click", function () {
+	if (confirm("メニューに戻りますか。\n 今やっているしりとりのデータは消えます。")) {
+		location.href = "index.html";
+	}
+});

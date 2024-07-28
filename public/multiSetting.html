@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>しりとりゲーム</title>
+	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="game.css">
+	<link rel="stylesheet" href="toggleSwitch.css">
+	<script src="main.js" defer></script>
+	<script src="multiSetting.js" defer></script>
+
+</head>
+
+<body>
+	<h1>しりとりゲーム</h1>
+
+	<div id="mode">
+		<h2>対戦モード</h2>
+		<button id="returnButton" class="menuButton">メニューに戻る</button>
+	</div>
+	
+	<div>
+		<div class="surround" id="opponent">
+			<h3>対戦相手の決め方</h3>
+			<label><input type="radio" name="Opponent" value="computer" checked>コンピューター</label>
+			<label><input type="radio" name="Opponent" value="random">ランダム</label>
+			<label><input type="radio" name="Opponent" value="password">合言葉</label>
+		</div>
+	</div>
+	<button class="menuButton" id="gameStart">ゲームスタート</button>
+
+
+
+
+
+
+</body>
+
+</html>

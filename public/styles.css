@@ -4,14 +4,29 @@ body {
 	padding: 20px;
 }
 
+
+button {
+	color: white;
+	padding: 10px 20px;
+	margin: 5px;
+	border: 1px;
+	border-radius: 5px;
+	font-size: 16px;
+}
+
 h1 {
 	font-weight: bold;
 	font-size: 60px;
 }
 
-.returnMenu {
+.menuButton {
 	color: black;
 	margin-left: 20px;
+	background-color: rgb(245, 245, 245);
+}
+
+.menuButton:hover {
+	background-color: white;
 }
 
 #mode{
@@ -25,7 +40,35 @@ h2{
 	font-size: 30px;
 }
 
-/* menu.html用 */
-.menuButton {
-	color: black;
+
+.surround{
+	text-align: justify;
+	margin: 50px;
+	padding: 20px;
+	border-radius: 20px;
+	border: 3px solid white;
 }
+
+.surround h3 {
+	padding: 0px, 0px, 0px, 0px;
+	font-size: 30px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+
+}
+
+.surround ul {
+	margin-top: 2px;
+}
+
+#opponent{
+	display: inline-block;
+	text-align: center;
+	padding: 30px;
+
+}
+
+#opponent label{
+	padding: 30px ;
+}
+
