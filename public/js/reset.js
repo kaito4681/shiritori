@@ -32,7 +32,7 @@ const reset = async () => {
 
 
 	// 前のワードを取得,置き換え
-	const previousWordResponse = await fetch("/shiritori", {
+	const previousWordResponse = await fetch("/solo", {
 		method: "GET",
 		headers: {
 			"UUID": uuid // UUIDをヘッダーに追加
@@ -51,7 +51,7 @@ const reset = async () => {
 	sendButton.disabled = false;
 
 	//頭文字の挿入
-	addInirialLetter(previousWord);
+	addInitialLetter(previousWord);
 }
 
 

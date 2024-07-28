@@ -5,14 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>しりとりゲーム</title>
-	<link rel="stylesheet" href="styles.css">
-	<link rel="stylesheet" href="game.css">
-	<link rel="stylesheet" href="toggleSwitch.css">
-	<script src="main.js" defer></script>
-	<script src="send.js" defer></script>
-	<script src="reset.js" defer></script>
-	<script src="toggleSwitch.js" defer></script>
-	<script src="multi.js" defer></script>
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/game.css">
+	<link rel="stylesheet" href="/css/toggleSwitch.css">
+	<script src="/js/main.js" defer></script>
+	<script src="/js/solo.js" defer></script>
+	<script src="/js/send.js" defer></script>
+	<script src="/js/reset.js" defer></script>
+	<script src="/js/toggleSwitch.js" defer></script>
 
 </head>
 
@@ -20,8 +20,7 @@
 	<h1>しりとりゲーム</h1>
 
 	<div id="mode">
-		<h2>対戦モード</h2>
-		<button id="returnSetting" class="menuButton">対戦相手を選び直す</button>
+		<h2>ひとりモード</h2>
 		<button id="returnButton" class="menuButton">メニューに戻る</button>
 	</div>
 
@@ -32,9 +31,9 @@
 
 	<p id="counter"></p>
 
-	<div class="toggleSwitch">
+	<div id="toggleSwitch">
 		<p>頭文字を自動入力(オフ⇆オン)</p>
-		<div class="toggle checked">
+		<div id="toggle" class="checked">
 			<input type="checkbox" name="check" />
 		</div>
 	</div>

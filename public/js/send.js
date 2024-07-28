@@ -17,7 +17,7 @@ const sendWord = async () => {
 
 	// POST
 	const response = await fetch(
-		"/shiritori",
+		"/solo",
 		{
 			method: "POST",
 			headers: {
@@ -69,7 +69,7 @@ const sendWord = async () => {
 	_updateCounter();
 
 	//頭文字の挿入
-	addInirialLetter(previousWord);
+	addInitialLetter(previousWord);
 
 	// ボタンを有効にする
 	sendButton.disabled = false;

@@ -1,16 +1,13 @@
 let counter = 0;
 
-onload = async (_event) => {
+async function _mainInitialize() {
 	// セッションストレージからUUIDを取得
 	let uuid = sessionStorage.getItem("uuid");
 	if (!uuid) uuid = await getUUID();
-
-	_toggleSetting();
-
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
-	let response = await fetch("/shiritori", {
+	let response = await fetch("/solo", {
 		method: "GET",
 		headers: {
 			"UUID": uuid
@@ -22,6 +19,7 @@ onload = async (_event) => {
 		const errorJson = await response.text();
 		const errorObj = JSON.parse(errorJson);
 		if (errorObj["errorCode"].slice(0, 1) === "3") {
+			//uuidの変更
 			uuid = await getUUID();
 			// 前のワードを取得
 			response = await fetch("/shiritori", {
@@ -49,14 +47,14 @@ onload = async (_event) => {
 	countText.innerHTML = `続けた回数: ${counter}回`;
 
 	//頭文字の挿入
-	addInirialLetter(previousWord);
+	addInitialLetter(previousWord);
 }
 
 //頭文字の挿入
-function addInirialLetter(previousWord) {
+function addInitialLetter(previousWord) {
 	const nextWordInput = document.querySelector("#nextWordInput");
 
-	const toggle = document.querySelector('.toggle');
+	const toggle = document.querySelector('#toggle');
 	// チェックボックスがオンのとき
 	if (toggle.classList.contains('checked')) {
 		// 最後が「ー」のとき
