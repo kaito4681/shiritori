@@ -1,4 +1,4 @@
-.toggle {
+#toggle {
 	position: relative;
 	width: 50px;
 	height: 30px;
@@ -8,11 +8,11 @@
 	cursor: pointer;
 }
 
-.toggle input[type=checkbox] {
+#toggle input[type=checkbox] {
 	display: none;
 }
 
-.toggle:before {
+#toggle:before {
 	content: "";
 	position: absolute;
 	top: 0;
@@ -25,7 +25,7 @@
 	transition: 0.2s ease-out;
 }
 
-.toggle:after {
+#toggle:after {
 	content: "";
 	position: absolute;
 	top: 2px;
@@ -40,17 +40,16 @@
 	transition: 0.2s ease-out;
 }
 
-.toggle.checked:before {
+#toggle.checked:before {
 	background: #35c759;
 }
 
-.toggle.checked:after {
+#toggle.checked:after {
 	left: 22px;
 	box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.5);
 }
 
-
-.toggleSwitch {
+#toggleSwitch {
 	display: flex;
 	justify-content: center;
 	align-items: center;

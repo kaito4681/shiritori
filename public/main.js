@@ -5,6 +5,8 @@ onload = async (_event) => {
 	let uuid = sessionStorage.getItem("uuid");
 	if (!uuid) uuid = await getUUID();
 
+	_toggleSetting();
+
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
