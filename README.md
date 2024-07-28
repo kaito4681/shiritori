@@ -31,3 +31,11 @@ https://docs.deno.com/runtime/manual/node/npm_specifiers/
 
 カタカナからひらがなに変換
 https://qiita.com/mimoe/items/855c112625d39b066c9a
+
+
+
+ソースコピー
+
+ON/OFFスイッチ
+https://hajimete.org/on-off-switch-design-7
+

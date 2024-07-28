@@ -65,3 +65,8 @@ button {
 	padding-left: 50px;
 }
 
+.toggleSwitch{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

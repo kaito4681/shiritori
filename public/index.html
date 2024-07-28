@@ -6,9 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>しりとりゲーム</title>
 	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="toggleSwitch.css">
 	<script src="main.js" defer></script>
 	<script src="send.js" defer></script>
 	<script src="reset.js" defer></script>
+	<script src="toggleSwitch.js" defer></script>
+
 </head>
 
 <body>
@@ -17,6 +20,13 @@
 	<input id="nextWordInput" type="text">
 	<button id="nextWordSendButton">送信</button>
 	<button id="resetButton">リセット</button>
+
+	<div class="toggleSwitch">
+		<p>頭文字を自動入力(オン⇆オフ)</p>
+		<div class="toggle">
+			<input type="checkbox" name="check" />
+		</div>
+	</div>
 
 	<div id="rule">
 		<h2>ルール</h2>
@@ -28,6 +38,7 @@
 			<li>最後の文字が「ん」となる単語、または一度使用した単語を入力したら負けになる。</li>
 		</ul>
 	</div>
+
 </body>
 
 </html>
