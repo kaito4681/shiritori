@@ -12,12 +12,18 @@ const sendWord = async () => {
 	const sendButton = document.querySelector("#nextWordSendButton");
 	sendButton.disabled = true;
 
+	// UUIDをセッションストレージから取得
+	const uuid = sessionStorage.getItem("uuid");
+
 	// POST
 	const response = await fetch(
 		"/shiritori",
 		{
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				 "Content-Type": "application/json",
+				 "UUID": uuid
+			 },
 			body: JSON.stringify({ nextWord: nextWordInputText })
 		}
 	);

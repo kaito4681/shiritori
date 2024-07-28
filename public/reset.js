@@ -3,12 +3,18 @@ const reset = async () => {
 		return;
 	}
 
+	// UUIDをセッションストレージから取得
+	const uuid = sessionStorage.getItem("uuid");
+
 	// サーバーにリセットリクエストを送信
 	const response = await fetch(
 		"/reset",
 		{
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				 "Content-Type": "application/json", 
+				"UUID": uuid
+		},
 		}
 	);
 
@@ -18,7 +24,12 @@ const reset = async () => {
 	}
 
 	// 前のワードを取得,置き換え
-	const previousWordResponse = await fetch("/shiritori", { method: "GET" });
+	const previousWordResponse = await fetch("/shiritori", { 
+		method: "GET",
+		headers: {
+			"UUID": uuid // UUIDをヘッダーに追加
+		}
+	});
 	const previousWord = await previousWordResponse.text();
 	const paragraph = document.querySelector("#previousWord");
 	paragraph.innerHTML = `前の単語: ${previousWord}`;

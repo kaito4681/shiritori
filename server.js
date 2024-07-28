@@ -1,13 +1,77 @@
 import { serveDir } from "https://deno.land/std@0.223.0/http/file_server.ts";
 import JishoAPI from "npm:unofficial-jisho-api@2.3.4";
+import { v4 } from "https://deno.land/std@0.113.0/uuid/mod.ts";
 
-let previousWord = "しりとり";
-let wordHistories = new Set(["しりとり"]);
+
+const wordMap = new Map();
+let previousWord;
+let wordHistories;
 const jisho = new JishoAPI();
 
 Deno.serve(async (request) => {
 	const pathname = new URL(request.url).pathname;
-	console.log(`pathname: ${pathname}`);
+	
+	
+	// GET UUID
+	if (request.method === "GET" && pathname === "/getId") {
+		//UUIDの生成
+		const uuid = v4.generate();
+		console.log(`新しいUUID: ${uuid}`);
+		
+		//UUIDをMapに保存
+		wordMap.set(
+			uuid,
+			{
+				previousWord: "しりとり",
+				wordHistories: new Set(["しりとり"])
+			}
+		);
+		
+		return new Response(
+			uuid,
+			{
+				headers: { "Content-Type": "text/plain; charset=utf-8" }
+			}
+		);
+	}
+	
+	//uuidの設定
+	const uuid = request.headers.get("UUID");
+	console.log(`pathname: ${pathname}, UUID: ${uuid}`);
+
+	if (!uuid) {
+		// UUIDが存在しない場合はindex.htmlを返す
+		return serveDir(
+			request,
+			{
+				fsRoot: "./public/",
+				urlRoot: "",
+				enableCors: true,
+			}
+		)
+	}
+
+	if (!wordMap.has(uuid)) {
+		return new Response(
+			JSON.stringify({
+				"errorMessage": "UUIDが登録されていません。リロードしてください",
+				"errorCode": "20003"
+			}),
+			{
+				status: 400,
+				headers: { "Content-Type": "application/json; charset=utf-8" }
+			}
+		);
+	}
+
+	
+
+	const userData = wordMap.get(uuid);
+	previousWord = userData.previousWord;
+	wordHistories = userData.wordHistories;
+
+
+
 
 	//GET previousWord
 	if (request.method === "GET" && pathname === "/shiritori") {
@@ -143,8 +207,8 @@ function isValidWord(nextWord, result) {
 
 // カタカナをひらがなに変換する関数
 function toHiragana(str) {
-    return str.replace(/[ァ-ン]/g, function(ch) {
+	return str.replace(/[ァ-ン]/g, function (ch) {
 		// ひらがなにずらす
-        return String.fromCharCode(ch.charCodeAt(0) - 0x60);
-    });
+		return String.fromCharCode(ch.charCodeAt(0) - 0x60);
+	});
 }
