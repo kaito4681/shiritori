@@ -1,3 +1,5 @@
+let counter = 0;
+
 onload = async (_event) => {
 	// セッションストレージからUUIDを取得
 	let uuid = sessionStorage.getItem("uuid");
@@ -40,6 +42,10 @@ onload = async (_event) => {
 	const paragraph = document.querySelector("#previousWord");
 	paragraph.innerHTML = `前の単語: ${previousWord}`;
 
+	//カウンター
+	const countText = document.querySelector("#counter");
+	countText.innerHTML = `続けた回数: ${counter}回`;
+
 	//頭文字の挿入
 	addInirialLetter(previousWord);
 }
@@ -72,7 +78,7 @@ function addInirialLetter(previousWord) {
 
 		// inputに次の単語の頭文字を挿入
 		nextWordInput.value = lastLetter;
-	}else{// チェックボックスがオフのとき
+	} else {// チェックボックスがオフのとき
 		// inputを空に
 		nextWordInput.value = "";
 	}
@@ -86,4 +92,16 @@ async function getUUID() {
 	// セッションストレージにUUIDを保存
 	sessionStorage.setItem("uuid", uuid);
 	return uuid;
+}
+
+function _updateCounter() {
+	counter++;
+	const countText = document.querySelector("#counter");
+	countText.innerHTML = `続けた回数: ${counter}回`;
+}
+
+function _resetCounter() {
+	counter = 0;
+	const countText = document.querySelector("#counter");
+	countText.innerHTML = "続けた回数: 0回";
 }

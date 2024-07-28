@@ -42,6 +42,9 @@ const reset = async () => {
 	const paragraph = document.querySelector("#previousWord");
 	paragraph.innerHTML = `前の単語: ${previousWord}`;
 
+	//counterのりせっと
+	_resetCounter();
+
 	// input、ボタンのリセット
 	document.querySelector("#nextWordInput").value = "";
 	const sendButton = document.querySelector("#nextWordSendButton");

@@ -5,68 +5,27 @@ body {
 }
 
 h1 {
-    font-weight: bold;
+	font-weight: bold;
 	font-size: 60px;
 }
 
-input{
-    border-radius: 5px;
-    font-size: 16px;
-	padding: 10px;
-	border: 0px;
-	margin-right: 20px;
+.returnMenu {
+	color: black;
+	margin-left: 20px;
 }
 
-#previousWord{
-	font-size: 24px;
-}
-
-/* ボタン */
-button {
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    border: 1px;
-    border-radius: 5px;
-    font-size: 16px;
-} 
-
-#nextWordSendButton{
-	background-color: rgb(0, 175, 0);
-}
-
-#nextWordSendButton:hover {
-	background-color: rgb(0, 195, 0);
-}
-
-#nextWordSendButton:disabled {
-	background-color: rgb(150, 175, 150);
-}
-
-
-#resetButton{
-	background-color:  rgb(235, 0, 0)
-}
-
-#resetButton:hover {
-	background-color: rgb(255,0, 0);
-} 
-
-/* ルール */
-#rule{
-	text-align: justify;
-	margin: 50px;
-	padding: 20px;
-	border-radius: 20px;
-	border: 3px solid white;
-}
-
-#rule>h2{
-	padding-left: 50px;
-}
-
-.toggleSwitch{
+#mode{
 	display: flex;
 	justify-content: center;
+	height: 50px;
 	align-items: center;
+}
+
+h2{
+	font-size: 30px;
+}
+
+/* menu.html用 */
+.menuButton {
+	color: black;
 }
