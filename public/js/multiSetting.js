@@ -9,10 +9,11 @@ onload = (_event) => {
 	}
 }
 
-document.querySelector("#gameStart").addEventListener("click",function(){
+document.querySelector("#gameStart").addEventListener("click", function () {
 	const selectedOpponent = document.querySelector('input[name="Opponent"]:checked').value;
 	// セッションストレージにopponentを保存
 	sessionStorage.setItem("opponent", selectedOpponent);
 
-	location.href = "multi.html";
+
+	location.href = selectedOpponent + ".html";
 });

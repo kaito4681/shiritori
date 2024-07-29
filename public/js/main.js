@@ -1,18 +1,21 @@
 let counter = 0;
 
-async function _mainInitialize() {
+async function _mainInitialize(pathname) {
 	// セッションストレージからUUIDを取得
 	let uuid = sessionStorage.getItem("uuid");
 	if (!uuid) uuid = await getUUID();
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
-	let response = await fetch("/solo", {
-		method: "GET",
-		headers: {
-			"UUID": uuid
-		}
-	});
+	const response = await fetch(
+		pathname,
+		{
+			method: "GET",
+			headers: {
+				"UUID": uuid
+			}
+		});
+	console.log(response);
 
 	// エラー処理
 	if (response.status !== 200) {
@@ -22,12 +25,13 @@ async function _mainInitialize() {
 			//uuidの変更
 			uuid = await getUUID();
 			// 前のワードを取得
-			response = await fetch("/shiritori", {
+			response = await fetch(pathname, {
 				method: "GET",
 				headers: {
 					"UUID": uuid
 				}
 			});
+
 		} else {
 			const message = errorObj["errorMessage"];
 			alert(message);
@@ -36,35 +40,45 @@ async function _mainInitialize() {
 
 	}
 
-	const previousWord = await response.text();
 
 	// 前のワードの書き換え
-	const paragraph = document.querySelector("#previousWord");
-	paragraph.innerHTML = `前の単語: ${previousWord}`;
+	const previousWordText = document.querySelector("#previousWord");
+	if (pathname === "/solo") {
+		const previousWord = await response.text();
+		previousWordText.innerHTML = `前の単語: ${previousWord}`;
+		//頭文字の挿入
+		addInitialLetter();
+	} else if (pathname === "/computer") {
+		const wordsJson = await response.text();
+		const wordsObj = JSON.parse(wordsJson);
+		previousWordText.innerHTML = `前の単語(相手): ${wordsObj["previousWord"]}`;
+		const secondLastWordText = document.querySelector("#secondLastWord");
+		secondLastWordText.innerHTML = `2つ前の単語(自分): ${wordsObj["secondLastWord"]}`;
+		//頭文字の挿入
+		addInitialLetter();
+	}
 
 	//カウンター
 	const countText = document.querySelector("#counter");
 	countText.innerHTML = `続けた回数: ${counter}回`;
 
-	//頭文字の挿入
-	addInitialLetter(previousWord);
 }
 
 //頭文字の挿入
-function addInitialLetter(previousWord) {
+function addInitialLetter() {
 	const nextWordInput = document.querySelector("#nextWordInput");
-
 	const toggle = document.querySelector('#toggle');
 	// チェックボックスがオンのとき
 	if (toggle.classList.contains('checked')) {
+		let prevWord = document.querySelector("#previousWord").slice(-1);
 		// 最後が「ー」のとき
-		let prevWord = previousWord;
-		if (prevWord.slice(-1) === "ー") {
+		if (prevWord === "ー") {
 			do {
 				prevWord = prevWord.slice(0, -1);
 				console.log(prevWord.slice(0, -1));
 			} while (prevWord.slice(-1) === "ー");
 		}
+
 		//最後が小さい文字のとき
 		let lastLetter = prevWord.slice(-1);
 		const smallLetter = new Map([
@@ -111,3 +125,4 @@ document.querySelector("#returnButton").addEventListener("click", function () {
 		location.href = "index.html";
 	}
 });
+

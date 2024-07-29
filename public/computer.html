@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>しりとりゲーム</title>
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/game.css">
+	<link rel="stylesheet" href="/css/toggleSwitch.css">
+	<script src="/js/main.js" defer></script>
+	<script src="/js/send.js" defer></script>
+	<script src="/js/reset.js" defer></script>
+	<script src="/js/computer.js" defer></script>
+	<script src="/js/toggleSwitch.js" defer></script>
+
+</head>
+
+<body>
+	<h1>しりとりゲーム</h1>
+
+	<div id="mode">
+		<h2>対戦モード</h2>
+		<button id="returnSetting" class="menuButton">対戦相手を選び直す</button>
+		<button id="returnButton" class="menuButton">メニューに戻る</button>
+	</div>
+
+	<p id="secondLastWord"></p>
+	<p id="previousWord"></p>
+	<input id="nextWordInput" type="text">
+	<button id="nextWordSendButton">送信</button>
+	<button id="resetButton">リセット</button>
+
+	<p id="counter"></p>
+
+	<div id="toggleSwitch">
+		<p>頭文字を自動入力(オフ⇆オン)</p>
+		<div id="toggle" class="checked">
+			<input type="checkbox" name="check" />
+		</div>
+	</div>
+
+	<div class="surround">
+		<h3>ルール</h3>
+		<ul>
+			<li>前の単語の最後の文字から始まる単語を入力する。</li>
+			<li>最後の文字が拗音・促音（ぁ、ぃ、ぅ、ぇ、ぉ、ゃ、ゅ、ょ、っ）などの小さい文字の場合、その文字を元の文字（あ、い、う、え、お、や、ゆ、よ）から始まる単語から始まる文字を入力する。</li>
+			<li>最後が「ー」のときは、その1つ前の文字から始まる単語を入力する</li>
+			<li>入力する単語は、すべてひらがなで入力する。</li>
+			<li>最後の文字が「ん」となる単語、または一度使用した単語を入力したら負けになる。</li>
+		</ul>
+		<h3>操作方法</h3>
+		<ul>
+			<li>ENTERで送信、ESCでリセットができます。</li>
+		</ul>
+	</div>
+
+</body>
+
+</html>

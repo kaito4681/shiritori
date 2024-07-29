@@ -4,12 +4,28 @@ import { isValidWord } from "./utility.js";
 const wordMap = new Map();
 const jisho = new JishoAPI();
 
-export function handleShiritoriGet(uuid) {
-	const userData = wordMap.get(uuid);
-	return new Response(userData.previousWord);
+function start(uuid) {
+	wordMap.set(
+		uuid,
+		{
+			previousWord: "しりとり",
+			wordHistories: new Set(["しりとり"])
+		}
+	);
 }
 
-export async function handleShiritoriPost(uuid, requestJson) {
+export async function soloGet(uuid) {
+	if (!wordMap.has(uuid)) start(uuid);
+	const userData = await wordMap.get(uuid);
+	console.log(wordMap);
+	return new Response(
+		userData.previousWord
+	);
+}
+
+export async function soloPost(uuid, request) {
+	const requestJson = await request.json();
+	if (!wordMap.has(uuid)) start(uuid);
 	const userData = wordMap.get(uuid);
 	const nextWord = requestJson["nextWord"];
 
@@ -75,7 +91,7 @@ export async function handleShiritoriPost(uuid, requestJson) {
 			}
 		)
 	}
-
+2
 	//過去に入力された単語のとき
 	if (userData.wordHistories.has(nextWord)) {
 		return new Response(
@@ -118,7 +134,8 @@ export async function handleShiritoriPost(uuid, requestJson) {
 	});
 }
 
-export function handleReset(uuid) {
+export function Reset(uuid) {
+	if (!wordMap.has(uuid)) start(uuid);
 	const userData = wordMap.get(uuid);
 	userData.previousWord = "しりとり";
 	userData.wordHistories = new Set(["しりとり"]);
@@ -132,5 +149,3 @@ export function handleReset(uuid) {
 		}
 	);
 }
-
-export { wordMap };

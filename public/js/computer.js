@@ -1,4 +1,4 @@
-const _pathname = "/solo";
+const _pathname = "/computer";
 
 //ロード時
 onload = (_event) => {

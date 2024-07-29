@@ -8,7 +8,7 @@ const reset = async () => {
 
 	// サーバーにリセットリクエストを送信
 	const response = await fetch(
-		"/reset",
+		_pathname + "/reset",
 		{
 			method: "POST",
 			headers: {
@@ -32,7 +32,7 @@ const reset = async () => {
 
 
 	// 前のワードを取得,置き換え
-	const previousWordResponse = await fetch("/solo", {
+	const previousWordResponse = await fetch(_pathname, {
 		method: "GET",
 		headers: {
 			"UUID": uuid // UUIDをヘッダーに追加

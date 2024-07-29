@@ -17,7 +17,7 @@ const sendWord = async () => {
 
 	// POST
 	const response = await fetch(
-		"/solo",
+		_pathname,
 		{
 			method: "POST",
 			headers: {
