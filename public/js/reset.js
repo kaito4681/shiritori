@@ -30,17 +30,8 @@ const reset = async () => {
 		}
 	}
 
-
-	// 前のワードを取得,置き換え
-	const previousWordResponse = await fetch(_pathname, {
-		method: "GET",
-		headers: {
-			"UUID": uuid // UUIDをヘッダーに追加
-		}
-	});
-	const previousWord = await previousWordResponse.text();
-	const paragraph = document.querySelector("#previousWord");
-	paragraph.innerHTML = `前の単語: ${previousWord}`;
+	// previousWord の更新
+	await changePrevWord(_pathname,uuid);
 
 	//counterのりせっと
 	_resetCounter();

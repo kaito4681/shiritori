@@ -61,9 +61,7 @@ const sendWord = async () => {
 	}
 
 	// previousWord の更新
-	const previousWord = await response.text();
-	const paragraph = document.querySelector("#previousWord");
-	paragraph.innerHTML = `前の単語: ${previousWord}`;
+	await changePrevWord(_pathname, uuid);
 
 	//counterの更新
 	_updateCounter();

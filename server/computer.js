@@ -1,54 +1,22 @@
-import { dicedeTurn } from "./utility.js";
+import { dicedeTurn, isValidWord } from "./utility.js";
+import JishoAPI from "npm:unofficial-jisho-api@2.3.4";
 
-// computer用の単語
-const ansMap = [
-	['あ', ['あさ', 'あめ', 'あひる', 'あんぱん', 'あかり', 'あんず', 'あじさい', 'あらいぐま', 'あかるい', 'あまい', 'あさごはん', 'あんまり', 'あゆ', 'あさひ', 'あおい', 'あらし', 'あくび', 'あんこ', 'あんまり', 'あたま', 'あか']],
-	['い', ['いちご', 'いぬ', 'いけ', 'いえ', 'いと', 'いわ', 'いす', 'いちばん', 'いんこ', 'いま', 'いろ', 'いけん', 'いちょう', 'いぬごや', 'いえいえ', 'いろは', 'いまいち', 'いのしし', 'いとこ', 'いすい']],
-	['う', ['うえ', 'うみ', 'うし', 'うさぎ', 'うめ', 'うた', 'うけつけ', 'うさ', 'うり', 'うなぎ', 'うさぎ', 'うちゅう', 'うつわ', 'うわさ', 'うみねこ', 'うける', 'うつくしい', 'うきわ', 'うま', 'うしろ']],
-	['え', ['えんぴつ', 'えんそく', 'えり', 'えさ', 'えん', 'えんがわ', 'えいが', 'えま', 'えんどう', 'えくぼ', 'えび', 'えんぴつけずり', 'えき', 'えい', 'えっち', 'えいち', 'えほん', 'えり', 'えんぴつけずり', 'えいが']],
-	['お', ['おに', 'おひさま', 'おもちゃ', 'おいしい', 'おなか', 'おやつ', 'おおきい', 'おふろ', 'おばけ', 'おとうさん', 'おかあさん', 'おや', 'おつり', 'おじさん', 'おねえさん', 'おなじ', 'おいも', 'おせんべい', 'おとこ', 'おとな']],
-	['か', ['かさ', 'かばん', 'かに', 'かき', 'かん', 'かんたん', 'かいもの', 'かお', 'かず', 'かんしゃ', 'かえる', 'かご', 'かいけつ', 'かれん', 'かんり', 'かつ', 'かしこい', 'かゆ', 'かりん', 'かめ']],
-	['き', ['きもの', 'きんぎょ', 'きれい', 'きた', 'きん', 'きつね', 'きゃべつ', 'きょう', 'きりん', 'きょうしつ', 'きのこ', 'きっぷ', 'きちん', 'きりかぶ', 'きせつ', 'きつつき', 'きたない', 'きゆう', 'きんたろう', 'きょく']],
-	['く', ['くつ', 'くるま', 'くり', 'くま', 'くも', 'くつした', 'くろ', 'くび', 'くろう', 'くわがた', 'くりん', 'くさ', 'くすり', 'くわ', 'くろねこ', 'くるみ', 'くんせい', 'くしゃみ', 'くびかざり', 'くさり']],
-	['け', ['けいさつ', 'けん', 'けいと', 'けんか', 'けんこう', 'けいかく', 'けんいん', 'けんじ', 'けんきゅう', 'けんさ', 'けしごむ', 'けんせつ', 'けつえき', 'けいえい', 'けいちょう', 'けいば', 'けんさく', 'けんちく', 'けんじょう', 'けいし']],
-	['こ', ['こえ', 'こども', 'こくばん', 'こま', 'こおり', 'こい', 'こけし', 'こまい', 'こむぎ', 'こわい', 'こどく', 'こねこ', 'こころ', 'こいぬ', 'こがね', 'こむぎこ', 'こころおきなく', 'こくさい', 'こわい', 'こけ']],
-	['さ', ['さくら', 'さかな', 'さとう', 'さる', 'さけ', 'さくらんぼ', 'さくらいろ', 'さつまいも', 'さわ', 'さむい', 'さしみ', 'さと', 'さくらもち', 'さっき', 'さし', 'さかなつり', 'さつえい', 'さしみ', 'さけん', 'さけのむ']],
-	['し', ['しごと', 'しゅうまつ', 'しろ', 'しま', 'しお', 'しんぶん', 'しる', 'しずか', 'しけん', 'しけんしつ', 'しんじゅ', 'しあわせ', 'しっぽ', 'しょくじ', 'しろくま', 'しまうま', 'しょくどう', 'しわ', 'しんぶんし', 'しき']],
-	['す', ['すいか', 'すいえい', 'すごい', 'すわる', 'すいりょう', 'すけーと', 'すず', 'すべりだい', 'すいか', 'すみれ', 'すこし', 'すり', 'すてき', 'すがた', 'すな', 'すりおろし', 'すこし', 'すてて', 'すい', 'すいせん']],
-	['せ', ['せんせい', 'せんたく', 'せいかつ', 'せき', 'せんたくき', 'せんしゅ', 'せいきゅう', 'せんじょう', 'せいかつ', 'せんよう', 'せんめんじょ', 'せんか', 'せいほう', 'せんぱい', 'せんそう', 'せいしん', 'せんえい', 'せいかい', 'せいよう', 'せいぞう']],
-	['そ', ['そら', 'そふ', 'そんけい', 'そくほう', 'そば', 'そろばん', 'それいゆ', 'そわそわ', 'そらまめ', 'それとも', 'そんけい', 'そっか', 'そのうち', 'そろえる', 'そんしょく', 'そつぎょう', 'そのまま', 'そんちょう', 'そくしん', 'それから']],
-	['た', ['たまご', 'たけやま', 'たんじょうび', 'たんご', 'たてもの', 'たくさん', 'たんぽぽ', 'たんか', 'たいや', 'たけし', 'たろう', 'たおる', 'たこ', 'たつ', 'たま', 'たけ', 'たび', 'たんじょう', 'たんす', 'たぬき']],
-	['ち', ['ちいさい', 'ちょう', 'ちかてつ', 'ちくわ', 'ちょうちょ', 'ちかく', 'ちょうり', 'ちり', 'ちょうき', 'ちゅうしゃ', 'ちょこれーと', 'ちか', 'ちょき', 'ちょくせつ', 'ちかく', 'ちょうだい', 'ちゅうもん', 'ちりょう', 'ちょうめい', 'ちゅうもん']],
-	['つ', ['つくえ', 'つめ', 'つき', 'つけもの', 'つばめ', 'つる', 'つくし', 'つつみ', 'つつじ', 'つばさ', 'つくる', 'つけ', 'つうしん', 'つめたい', 'つえ', 'ついて', 'つば', 'つい', 'つれ', 'つま']],
-	['て', ['てんぷら', 'てりやき', 'てきとう', 'てつどう', 'てんき', 'てがみ', 'てすと', 'てんごく', 'てきとう', 'ていねい', 'てまえ', 'てんのう', 'てんし', 'てきせつ', 'てんきよほう', 'てんさい', 'てんごく', 'てんか', 'てつ', 'てんとう']],
-	['と', ['とんかつ', 'とりあえず', 'とおい', 'とけい', 'ともだち', 'とくい', 'とんぼ', 'とろろ', 'とら', 'とり', 'とりかえし', 'とくい', 'とくぎ', 'としょかん', 'とけい', 'とりえ', 'とおり', 'とらんぷ', 'とく', 'とし']],
-	['な', ['なつ', 'なか', 'ながい', 'なまけもの', 'なつやすみ', 'なにか', 'なわばり', 'なかよし', 'なごや', 'なきごえ', 'なにわ', 'なぞ', 'なべ', 'ななめ', 'なまえ', 'なべもの', 'なごみ', 'なりきり', 'ながれ', 'なつめ']],
-	['に', ['にく', 'にんぎょう', 'にんじん', 'にじ', 'にくまん', 'にんぎょう', 'にわとり', 'にこにこ', 'にんき', 'にほん', 'にわ', 'にぎやか', 'にっき', 'にんにく', 'にあい', 'にすい', 'にごり', 'にょうぼ', 'にくりょう', 'にぎる']],
-	['ぬ', ['ぬいぐるみ', 'ぬれた', 'ぬるい', 'ぬいもの', 'ぬま', 'ぬける', 'ぬいとり', 'ぬの', 'ぬいさし', 'ぬいこむ', 'ぬめり', 'ぬる', 'ぬし', 'ぬれ', 'ぬう', 'ぬけ', 'ぬりえ', 'ぬか', 'ぬさき', 'ぬし']],
-	['ね', ['ねこ', 'ねむい', 'ねじ', 'ねんど', 'ねこ', 'ねつ', 'ねんきん', 'ねんまつ', 'ねごと', 'ねらう', 'ねばる', 'ねんかん', 'ねんれい', 'ねんだい', 'ねんし', 'ねんぷう', 'ねんどろいど', 'ねぎ', 'ねがい', 'ねんし']],
-	['の', ['のり', 'のうぎょう', 'のうこう', 'のばす', 'のぼる', 'のけん', 'のさ', 'のぞき', 'のし', 'のこる', 'のうりょく', 'のんびり', 'のうほう', 'のぶ', 'のりもの', 'のうそん', 'のき', 'のりん', 'のい', 'のも']],
-	['は', ['はな', 'はやい', 'はんとう', 'はし', 'はる', 'はなび', 'はんばい', 'はつおん', 'はち', 'はね', 'はじめ', 'はこ', 'はら', 'はんたい', 'はたけ', 'はく', 'はんだん', 'はま', 'はば', 'はるい']],
-	['ひ', ['ひこうき', 'ひかり', 'ひろい', 'ひやす', 'ひざ', 'ひげ', 'ひと', 'ひかる', 'ひま', 'ひやけ', 'ひしょ', 'ひょう', 'ひょうが', 'ひょういん', 'ひきこもり', 'ひじ', 'ひや', 'ひとり', 'ひとけ', 'ひき']],
-	['ふ', ['ふね', 'ふゆ', 'ふるい', 'ふくろ', 'ふとん', 'ふじさん', 'ふみ', 'ふじ', 'ふうせん', 'ふわふわ', 'ふねい', 'ふうふ', 'ふね', 'ふた', 'ふみょう', 'ふち', 'ふし', 'ふき', 'ふかい', 'ふとく']],
-	['へ', ['へや', 'へん', 'へいき', 'へんしん', 'へた', 'へいじょう', 'へいわ', 'へんこう', 'へっこみ', 'へんか', 'へやけん', 'へいきん', 'へいえい', 'へいちょう', 'へんとう', 'へんきょう', 'へいゆ', 'へいじん', 'へき', 'へいけん']],
-	['ほ', ['ほし', 'ほうせき', 'ほり', 'ほうかご', 'ほけん', 'ほか', 'ほうこう', 'ほけんしつ', 'ほうじん', 'ほうじょ', 'ほりえ', 'ほかん', 'ほけん', 'ほしぞら', 'ほうれんそう', 'ほうし', 'ほうき', 'ほうけい', 'ほお', 'ほうか']],
-	['ま', ['まつり', 'まるい', 'まち', 'まんが', 'まいご', 'まる', 'まど', 'まほう', 'まんま', 'まおう', 'まんまる', 'まるで', 'まつ', 'まつり', 'まんえん', 'まぶしい', 'まめ', 'まよい', 'まね', 'まわり']],
-	['み', ['みず', 'みかん', 'みょう', 'みみ', 'みせ', 'みどり', 'みつ', 'みやげ', 'みかけ', 'みそ', 'みえ', 'みゆ', 'みき', 'みお', 'みつける', 'みやこ', 'みょうじ', 'みな', 'みち', 'みゆ']],
-	['む', ['むかし', 'むすめ', 'むし', 'むら', 'むこう', 'むぎ', 'むけ', 'むね', 'むり', 'むる', 'むねん', 'むける', 'むこう', 'むりょう', 'むしろ', 'むすこ', 'むね', 'むさし', 'むかい', 'むねん']],
-	['め', ['めん', 'めいわく', 'めだま', 'めんかい', 'めいし', 'めいけん', 'めざまし', 'めんて', 'めいろ', 'めいじ', 'めいぼ', 'めいしょう', 'めし', 'めいわく', 'めんとう', 'めんつゆ', 'めいきょく', 'めいめい', 'めぐ', 'めいわく']],
-	['も', ['もり', 'もも', 'もん', 'もつ', 'ももいろ', 'もじ', 'もち', 'もろこし', 'もくてき', 'もめん', 'もんだい', 'もくじ', 'もよおし', 'もり', 'もんだい', 'もんす', 'もたらす', 'もけい', 'もよう', 'もんか']],
-	['や', ['やま', 'やさしい', 'やく', 'やつ', 'やきゅう', 'やける', 'やくそく', 'やさしさ', 'やま', 'やおや', 'やく', 'やわらかい', 'やめる', 'やさ', 'やくし', 'やくいん', 'やき', 'やけん', 'やくちょう', 'やき']],
-	['ゆ', ['ゆうびんきょく', 'ゆうめい', 'ゆき', 'ゆめ', 'ゆでたまご', 'ゆうがた', 'ゆるい', 'ゆび', 'ゆか', 'ゆたんぽ', 'ゆうびん', 'ゆらい', 'ゆり', 'ゆかた', 'ゆうじょう', 'ゆうそう', 'ゆず', 'ゆうしゃ', 'ゆうき', 'ゆみ']],
-	['よ', ['よる', 'ようじ', 'よめ', 'よる', 'よすが', 'よせ', 'よか', 'よろこぶ', 'よこ', 'よび', 'よる', 'よわい', 'よい', 'よろい', 'よお', 'よさ', 'よっこい', 'よく', 'よたる', 'よいしょ']],
-	['ら', ['らいおん', 'らいん', 'らく', 'らいねん', 'らくらく', 'らしんばん', 'らっきょう', 'らんまん', 'らいせん', 'らいか', 'らんち', 'らいきょう', 'らいず', 'らんたん', 'らいがん', 'らいよ', 'らいりん', 'らいあん', 'らんじ', 'らいし']],
-	['り', ['りんご', 'りょうり', 'りつ', 'りっく', 'りんか', 'りょうし', 'りゆう', 'りょうき', 'りだい', 'りんせん', 'りくつ', 'りっぱ', 'りょう', 'りし', 'りゆう', 'りえき', 'りんとう', 'りんけい', 'りょうほう', 'りゅうし']],
-	['る', ['るす', 'るい', 'るいとう', 'るいさ', 'るり', 'るちあ', 'るしあ', 'るいせん', 'るいせい', 'るちゅ', 'るか', 'るいけん', 'るいし', 'るいしん', 'るいしんとう', 'るりこ', 'るしゅ', 'るま', 'るり', 'るる']],
-	['れ', ['れい', 'れきし', 'れいせい', 'れいぞうこ', 'れつ', 'れんしゅう', 'れんらく', 'れんさ', 'れいえん', 'れつい', 'れんきゅう', 'れんき', 'れいこ', 'れんが', 'れんこう', 'れんせい', 'れいし', 'れんちゅう', 'れんけい', 'れんけい']],
-	['ろ', ['ろう', 'ろうそく', 'ろく', 'ろいき', 'ろけい', 'ろんご', 'ろくしょう', 'ろけい', 'ろいき', 'ろうか', 'ろっか', 'ろご', 'ろけん', 'ろうさ', 'ろくし', 'ろり', 'ろうちょう', 'ろけい', 'ろうおん', 'ろうし']],
-	['わ', ['わら', 'わし', 'わんこ', 'わかめ', 'わかさ', 'わかりやすい', 'わらう', 'わき', 'わく', 'わしん', 'わん', 'わろ', 'わかる', 'わたし', 'わく', 'わしつ', 'わらい', 'わすれる', 'わきまえ', 'わるい']],
-];
 
-const wordMap = new Map(ansMap);
+async function readJsonFile() {
+	const filePath = "./server/ansMap.json";
+	try {
+		const data = await Deno.readTextFile(filePath);
+		const jsonData = JSON.parse(data);
+		// console.log(jsonData)
+		return jsonData;
+	} catch (error) {
+		console.error("ファイルの読み込み中にエラーが発生しました:", error);
+	}
+}
+
+const ansMap = await readJsonFile();
+
+const wordMap = new Map();
 
 function initialize(uuid) {
 	wordMap.set(
@@ -57,7 +25,7 @@ function initialize(uuid) {
 			secondLastWord: "",
 			previousWord: "しりとり",
 			wordHistories: new Set(["しりとり"]),
-			cpuWord: new Map(ansMap)
+			cpuWord: new Map(Object.entries(ansMap))
 		}
 	);
 }
@@ -67,7 +35,7 @@ function start(uuid) {
 	initialize(uuid);
 	const userData = wordMap.get(uuid);
 	if (turn !== "You") {
-		const ansArray = userData.cpuWord.get(userData.previousWord);
+		const ansArray = userData.cpuWord.get(userData.previousWord.slice(-1));
 		// console.log(ansArray);
 		let ans = null;
 		while (!ans || userData.wordHistories.has(ans)) {
@@ -84,79 +52,30 @@ function start(uuid) {
 	wordMap.set(uuid, userData);
 }
 
+// GET
 export function get(uuid) {
 	if (!wordMap.has(uuid)) start(uuid);
 	const userData = wordMap.get(uuid);
-	return shiritori(uuid, userData);
-}
-
-//GET コンピュータの分も進める。
-export function shiritori(uuid, userData) {
-	const ansArray = userData.cpuWord.get(userData.previousWord.slice(0, 1));
-	console.log(ansArray);
-	let ans = null;
-	while (!ans || userData.wordHistories.has(ans)) {
-		//ユーザの勝ちの時
-		if (ansArray.length === 0) {
-			wordMap.delete(uuid)
-
-			return new Response(
-				JSON.stringify({
-					"errorMessage": "あなたの勝ちです",
-					"errorCode": "40001"
-				}),
-				{
-					status: 400,
-					headers: {
-						"Content-Type": "text/json; charset=utf-8"
-					}
-				}
-			)
-		}
-
-		//ランダムで続ける単語を返す。
-		const randomIndex = Math.floor(Math.random() * ansArray.length);
-		ans = ansArray[randomIndex];
-		ansArray.splice(randomIndex, 1);
-	}
-
-	userData.secondLastWord = userData.previousWord;
-	userData.previousWord = ans;
-
+	// return shiritori(uuid, userData);
 	wordMap.set(uuid, userData);
-	if (ansArray.length === 0) {
-		return new Response(
-			JSON.stringify({
-				"errorMessage": "あなたの勝ちです",
-				"errorCode": "40001"
-			}),
-			{
-				headers: {
-					"Content-Type": "text/json; charset=utf-8"
-				}
+	return new Response(
+		JSON.stringify({
+			secondLastWord: userData.secondLastWord,
+			previousWord: userData.previousWord
+		}),
+		{
+			headers: {
+				"Content-Type": "text/json; charset=utf-8"
 			}
-		);
-	} else {
-		wordMap.set(uuid, userData);
-		return new Response(
-			JSON.stringify({
-				secondLastWord: userData.secondLastWord,
-				previousWord: userData.previousWord
-			}),
-			{
-				headers: {
-					"Content-Type": "text/json; charset=utf-8"
-				}
-			}
-		);
-	}
-
+		}
+	);
 }
 
-//POST soloと同じ
+
+// POST 
 export async function post(uuid, request) {
-	const requestJson = await request.json();
 	if (!wordMap.has(uuid)) start(uuid);
+	const requestJson = await request.json();
 	const userData = wordMap.get(uuid);
 	const nextWord = requestJson["nextWord"];
 
@@ -240,6 +159,7 @@ export async function post(uuid, request) {
 
 
 	// 実在する単語ではない時
+	const jisho = new JishoAPI();
 	const result = await jisho.searchForPhrase(nextWord);
 	const wordExists = isValidWord(nextWord, result);
 	if (!wordExists) {
@@ -257,18 +177,72 @@ export async function post(uuid, request) {
 
 	// エラーなしの時
 	userData.wordHistories.add(nextWord);
-	userData.previousWord = nextWord;
-	wordMap.set(uuid, userData);
+	userData.secondLastWord = nextWord;
 
-	return new Response(
-		userData.previousWord,
-		{
-			headers: { "Content-Type": "text/plain; charset=utf-8" }
-		});
+
+
+	// cpu
+	const ansArray = userData.cpuWord.get(nextWord.slice(-1));
+	let ans = null;
+	while (!ans || userData.wordHistories.has(ans)) {
+		//ユーザの勝ちの時
+		if (ansArray.length === 0) {
+			wordMap.delete(uuid)
+
+			return new Response(
+				JSON.stringify({
+					"errorMessage": "あなたの勝ちです",
+					"errorCode": "40001"
+				}),
+				{
+					status: 400,
+					headers: {
+						"Content-Type": "text/json; charset=utf-8"
+					}
+				}
+			)
+		}
+
+		//ランダムで続ける単語を返す。
+		const randomIndex = Math.floor(Math.random() * ansArray.length);
+		ans = ansArray[randomIndex];
+		ansArray.splice(randomIndex, 1);
+	}
+
+	userData.previousWord = ans;
+
+	wordMap.set(uuid, userData);
+	if (ansArray.length === 0) {
+		return new Response(
+			JSON.stringify({
+				"errorMessage": "あなたの勝ちです",
+				"errorCode": "40001"
+			}),
+			{
+				headers: {
+					"Content-Type": "text/json; charset=utf-8"
+				}
+			}
+		);
+	} else {
+		//エラーなし
+		wordMap.set(uuid, userData);
+		return new Response(
+			JSON.stringify({
+				secondLastWord: userData.secondLastWord,
+				previousWord: userData.previousWord
+			}),
+			{
+				headers: {
+					"Content-Type": "text/json; charset=utf-8"
+				}
+			}
+		);
+	}
 }
 
 //reset 
-export function Reset(uuid) {
+export function reset(uuid) {
 	// 初期化
 	if (!wordMap.has(uuid)) start(uuid);
 	else initialize(uuid);

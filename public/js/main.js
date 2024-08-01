@@ -7,56 +7,7 @@ async function _mainInitialize(pathname) {
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
-	const response = await fetch(
-		pathname,
-		{
-			method: "GET",
-			headers: {
-				"UUID": uuid
-			}
-		});
-	console.log(response);
-
-	// エラー処理
-	if (response.status !== 200) {
-		const errorJson = await response.text();
-		const errorObj = JSON.parse(errorJson);
-		if (errorObj["errorCode"].slice(0, 1) === "3") {
-			//uuidの変更
-			uuid = await getUUID();
-			// 前のワードを取得
-			response = await fetch(pathname, {
-				method: "GET",
-				headers: {
-					"UUID": uuid
-				}
-			});
-
-		} else {
-			const message = errorObj["errorMessage"];
-			alert(message);
-			return;
-		}
-
-	}
-
-
-	// 前のワードの書き換え
-	const previousWordText = document.querySelector("#previousWord");
-	if (pathname === "/solo") {
-		const previousWord = await response.text();
-		previousWordText.innerHTML = `前の単語: ${previousWord}`;
-		//頭文字の挿入
-		addInitialLetter();
-	} else if (pathname === "/computer") {
-		const wordsJson = await response.text();
-		const wordsObj = JSON.parse(wordsJson);
-		previousWordText.innerHTML = `前の単語(相手): ${wordsObj["previousWord"]}`;
-		const secondLastWordText = document.querySelector("#secondLastWord");
-		secondLastWordText.innerHTML = `2つ前の単語(自分): ${wordsObj["secondLastWord"]}`;
-		//頭文字の挿入
-		addInitialLetter();
-	}
+	await changePrevWord(pathname, uuid);
 
 	//カウンター
 	const countText = document.querySelector("#counter");
@@ -70,9 +21,9 @@ function addInitialLetter() {
 	const toggle = document.querySelector('#toggle');
 	// チェックボックスがオンのとき
 	if (toggle.classList.contains('checked')) {
-		let prevWord = document.querySelector("#previousWord").slice(-1);
+		let prevWord = document.querySelector("#previousWord").textContent;;
 		// 最後が「ー」のとき
-		if (prevWord === "ー") {
+		if (prevWord.slice(-1) === "ー") {
 			do {
 				prevWord = prevWord.slice(0, -1);
 				console.log(prevWord.slice(0, -1));
@@ -99,6 +50,59 @@ function addInitialLetter() {
 
 }
 
+// 前のワードの書き換え
+async function changePrevWord(pathname, uuid) {
+	let response = await fetch(
+		pathname,
+		{
+			method: "GET",
+			headers: {
+				"UUID": uuid
+			}
+		});
+	console.log(response);
+
+	// エラー処理
+	if (response.status !== 200) {
+		const errorJson = await response.text();
+		const errorObj = JSON.parse(errorJson);
+		if (errorObj["errorCode"].slice(0, 1) === "3") {
+			//uuidの変更
+			uuid = await getUUID();
+			// 前のワードを取得
+			response = await fetch(
+				pathname, {
+				method: "GET",
+				headers: {
+					"UUID": uuid
+				}
+			});
+
+		} else {
+			const message = errorObj["errorMessage"];
+			alert(message);
+			return;
+		}
+	}
+	
+
+	const previousWordText = document.querySelector("#previousWord");
+	if (pathname === "/solo") {
+		const previousWord = await response.text();
+		previousWordText.innerHTML = `前の単語: ${previousWord}`;
+		//頭文字の挿入
+		addInitialLetter();
+	} else if (pathname === "/computer") {
+		const wordsJson = await response.text();
+		const wordsObj = JSON.parse(wordsJson);
+		previousWordText.innerHTML = `前の単語(相手): ${wordsObj["previousWord"]}`;
+		const secondLastWordText = document.querySelector("#secondLastWord");
+		secondLastWordText.innerHTML = `2つ前の単語(自分): ${wordsObj["secondLastWord"]}`;
+		//頭文字の挿入
+		addInitialLetter();
+	}
+}
+
 async function getUUID() {
 	const response = await fetch("/getId", { method: "GET" });
 	const uuid = await response.text();
@@ -121,7 +125,7 @@ function _resetCounter() {
 }
 
 document.querySelector("#returnButton").addEventListener("click", function () {
-	if (confirm("メニューに戻りますか。\n 今やっているしりとりのデータは消えます。")) {
+	if (confirm("メニューに戻りますか。\n")) {
 		location.href = "index.html";
 	}
 });

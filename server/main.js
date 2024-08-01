@@ -1,7 +1,7 @@
 import { serveDir } from "https://deno.land/std@0.223.0/http/file_server.ts";
 
 import { soloGet, soloPost, Reset } from "./solo.js";
-import { get as cpGet, post as cpPost } from "./computer.js"
+import { get as cpGet, post as cpPost, reset as cpReset} from "./computer.js"
 import { getId, idList } from "./utility.js"
 
 Deno.serve(async (request) => {
@@ -58,18 +58,15 @@ Deno.serve(async (request) => {
 
 	//vsComputer用
 	if (request.method === "GET" && pathname === "/computer") {
-		console.log("a");
-		return await cpGet(uuid);
+		return cpGet(uuid);
 	}
 	
 	if (request.method === "POST" && pathname === "/computer") {
-		console.log("b");
 		return await cpPost(uuid, request);
 	}
 	
-	if (request.method === "POST" && pathname === "computer/reset") {
-		console.log("c");
-		return await Reset(uuid);
+	if (request.method === "POST" && pathname === "/computer/reset") {
+		return cpReset(uuid);
 	}
 
 
