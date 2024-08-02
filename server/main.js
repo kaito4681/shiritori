@@ -1,8 +1,10 @@
 import { serveDir } from "https://deno.land/std@0.223.0/http/file_server.ts";
 
 import { soloGet, soloPost, Reset } from "./solo.js";
-import { get as cpGet, post as cpPost, reset as cpReset} from "./computer.js"
+import { get as cpGet, post as cpPost, reset as cpReset } from "./computer.js"
+import { search } from "./multi.js";
 import { getId, idList } from "./utility.js"
+
 
 Deno.serve(async (request) => {
 	const url = new URL(request.url);
@@ -53,20 +55,27 @@ Deno.serve(async (request) => {
 	}
 
 	if (request.method === "POST" && pathname === "/solo/reset") {
-		return await Reset(uuid);
+		return Reset(uuid);
 	}
 
 	//vsComputer用
 	if (request.method === "GET" && pathname === "/computer") {
 		return cpGet(uuid);
 	}
-	
+
 	if (request.method === "POST" && pathname === "/computer") {
 		return await cpPost(uuid, request);
 	}
-	
+
 	if (request.method === "POST" && pathname === "/computer/reset") {
 		return cpReset(uuid);
+	}
+
+	// //対戦相手を探す
+	if (request.method === "POST" && pathname === "/search") {
+		console.log("search\n");
+		
+		return search(uuid,request);
 	}
 
 

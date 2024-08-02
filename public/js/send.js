@@ -57,6 +57,9 @@ const sendWord = async () => {
 				await getUUID();
 				await reset();
 				return;
+
+			default:
+				return;
 		}
 	}
 

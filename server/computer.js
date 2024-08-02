@@ -34,7 +34,7 @@ function start(uuid) {
 	const turn = dicedeTurn();
 	initialize(uuid);
 	const userData = wordMap.get(uuid);
-	if (turn !== "You") {
+	if (turn  === false) {
 		const ansArray = userData.cpuWord.get(userData.previousWord.slice(-1));
 		// console.log(ansArray);
 		let ans = null;
@@ -179,10 +179,21 @@ export async function post(uuid, request) {
 	userData.wordHistories.add(nextWord);
 	userData.secondLastWord = nextWord;
 
-
-
 	// cpu
-	const ansArray = userData.cpuWord.get(nextWord.slice(-1));
+	prevWord = nextWord;
+	if (prevWord.slice(-1) === "ー") {
+		do {
+			prevWord = prevWord.slice(0, -1);
+			console.log(prevWord.slice(0, -1));
+		} while (prevWord.slice(-1) === "ー");
+	}
+	//最後が小さい文字のとき
+	lastLetter = prevWord.slice(-1);
+	if (smallLetter.has(lastLetter)) {
+		lastLetter = smallLetter.get(lastLetter);
+	}
+
+	const ansArray = userData.cpuWord.get(lastLetter);
 	let ans = null;
 	while (!ans || userData.wordHistories.has(ans)) {
 		//ユーザの勝ちの時

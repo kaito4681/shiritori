@@ -2,6 +2,7 @@ import { v4 } from "https://deno.land/std@0.113.0/uuid/mod.ts";
 import JishoAPI from "npm:unofficial-jisho-api@2.3.4";
 
 export const idList = [];
+export const battleIdList = [];
 
 //UUIDを生成
 export function getId() {
@@ -103,9 +104,17 @@ function toHiragana(str) {
 export function dicedeTurn(){
 	const rand = Math.random();
 	if(rand < 0.5){
-		return "You";
+		return true;
 	}else{
-		return "Opponent";
+		return false;
 	}
 }
 
+
+
+//battleIdを生成
+export function getBattleId() {
+	const battleId = v4.generate();
+	battleIdList.push(battleId);
+	return battleId;
+}
