@@ -1,19 +1,16 @@
 import { battleMap } from "./multiSetting.js";
 
-export function update(request) {
-	const battleId = request.body.battleId;
+export async function update(request) {
+	const data = await request.json();
+	const battleId = data.battleId;
+	console.log(`battleId:${battleId}`);
+
 	if (battleId) {
 		const battle = battleMap.get(battleId);
+		console.log(battle);
+
 		return new Response(
-			JSON.stringify({
-				"battleId": battleId,
-				"uuid0": battle.uuid0,
-				"uuid1": battle.uuid1,
-				"turn": battle.turn,
-				"previousWord": battle.previousWord,
-				"secondLastWord": battle.secondLastWord,
-				"exit": false
-			}),
+			battle,
 			{
 				status: 200,
 				headers: { "Content-Type": "application/json; charset=utf-8" },

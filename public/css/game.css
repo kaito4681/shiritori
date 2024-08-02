@@ -30,3 +30,17 @@ input {
 #resetButton:hover {
 	background-color: rgb(255, 0, 0);
 }
+
+#multiWord {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#multiWord h3{
+	margin: 2px;
+}
+
+#multiWord p{
+	margin: 2px;
+}

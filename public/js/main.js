@@ -7,7 +7,7 @@ async function _mainInitialize(pathname) {
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
-	if (pathname !== "multi") await changePrevWord(pathname, uuid);
+	if (pathname !== "/multi") await changePrevWord(pathname, uuid);
 
 	//カウンター
 	const countText = document.querySelector("#counter");

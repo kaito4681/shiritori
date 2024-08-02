@@ -79,10 +79,10 @@ Deno.serve(async (request) => {
 
 	//multi用
 	if (request.method === "POST" && pathname === "/update") {
-		return update(request);
+		return await update(request);
 	}
 
-	
+
 
 
 

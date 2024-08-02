@@ -14,6 +14,7 @@ onload = async (_event) => {
 		return;
 	} else {
 		let response;
+		console.log(`battleId:${battleId}`);
 		while (1) {
 			await _sleep(1000);
 			response = await fetch(
@@ -29,9 +30,10 @@ onload = async (_event) => {
 					})
 				}
 			);
-			const resText = await response.text();
-			const battleObj = JSON.parse(resText);
-			if (battleObj["exit"] == "true") {
+
+			const battleObj = await response.json();
+			console.log(battleObj);
+			if (battleObj["exit"] == true) {
 				alert("勝負がついた")
 				location.href = "multiSetting.html"
 				return;
@@ -45,19 +47,16 @@ onload = async (_event) => {
 				sendButton.disabled = false;
 				input.disabled = false;
 				turn.innerHTML = "あなたのターンです";
+				document.querySelector("#previousWord").innerHTML = `前の単語(相手):${battleObj["previousWord"]}`;
+				document.querySelector("#secondLastWord").innerHTML = `2つ前の単語(自分):${battleObj["secondLastWord"] === undefined ? "" : battleObj["secondLastWord"]}`;
+				addInitialLetter();
 			} else {
 				sendButton.disabled = true;
 				input.disabled = true;
 				turn.innerHTML = "あいてのターンです";
+				document.querySelector("#previousWord").innerHTML = `前の単語(自分):${battleObj["previousWord"]}`;
+				document.querySelector("#secondLastWord").innerHTML = `2つ前の単語(相手):${battleObj["secondLastWord"] === undefined ? "" : battleObj["secondLastWord"]}`;
 			}
 		}
-
-
-
-
 	};
 }
-
-
-
-
