@@ -7,7 +7,7 @@ async function _mainInitialize(pathname) {
 	console.log(`uuid: ${uuid}`);
 
 	// 前のワードを取得
-	await changePrevWord(pathname, uuid);
+	if (pathname !== "multi") await changePrevWord(pathname, uuid);
 
 	//カウンター
 	const countText = document.querySelector("#counter");
@@ -100,7 +100,7 @@ async function changePrevWord(pathname, uuid) {
 		secondLastWordText.innerHTML = `2つ前の単語(自分): ${wordsObj["secondLastWord"]}`;
 		//頭文字の挿入
 		addInitialLetter();
-	}
+	} 
 }
 
 async function getUUID() {

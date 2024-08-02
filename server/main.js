@@ -3,7 +3,7 @@ import { serveDir } from "https://deno.land/std@0.223.0/http/file_server.ts";
 import { soloGet, soloPost, Reset } from "./solo.js";
 import { get as cpGet, post as cpPost, reset as cpReset } from "./computer.js"
 import { search } from "./multiSetting.js";
-import { get as multiGet } from "./multi.js";
+import { update } from "./multi.js";
 import { getId, idList } from "./utility.js"
 
 
@@ -74,15 +74,15 @@ Deno.serve(async (request) => {
 
 	// //対戦相手を探す
 	if (request.method === "POST" && pathname === "/search") {
-		console.log("ああああ\n");
-		
 		return search(uuid,request);
 	}
 
 	//multi用
-	if (request.method === "POST" && pathname === "/multi") {
-		return multiGet(request);
+	if (request.method === "POST" && pathname === "/update") {
+		return update(request);
 	}
+
+	
 
 
 

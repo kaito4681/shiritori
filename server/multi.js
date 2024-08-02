@@ -1,6 +1,6 @@
 import { battleMap } from "./multiSetting.js";
 
-export function get(request) {
+export function update(request) {
 	const battleId = request.body.battleId;
 	if (battleId) {
 		const battle = battleMap.get(battleId);

@@ -7,7 +7,7 @@ onload = async (_event) => {
 
 	const uuid = sessionStorage.getItem("uuid");
 	const battleId = sessionStorage.getItem("battleId");
-	
+
 	if (!uuid) {
 		alert("対戦相手選択に戻って、もう一度進めてください。");
 		location.href = "multiSetting.html";
@@ -17,7 +17,7 @@ onload = async (_event) => {
 		while (1) {
 			await _sleep(1000);
 			response = await fetch(
-				"/multi",
+				"/update",
 				{
 					method: "POST",
 					headers: {
@@ -32,8 +32,7 @@ onload = async (_event) => {
 			const resText = await response.text();
 			const battleObj = JSON.parse(resText);
 			if (battleObj["exit"] == "true") {
-				//なおす
-				alert("終了")
+				alert("勝負がついた")
 				location.href = "multiSetting.html"
 				return;
 			}
@@ -49,11 +48,14 @@ onload = async (_event) => {
 			} else {
 				sendButton.disabled = true;
 				input.disabled = true;
-				document.querySelector("nextWordInput").disabled = true;
 				turn.innerHTML = "あいてのターンです";
 			}
-		};
-	}
+		}
+
+
+
+
+	};
 }
 
 
