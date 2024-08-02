@@ -91,7 +91,7 @@ export async function soloPost(uuid, request) {
 			}
 		)
 	}
-2
+
 	//過去に入力された単語のとき
 	if (userData.wordHistories.has(nextWord)) {
 		return new Response(

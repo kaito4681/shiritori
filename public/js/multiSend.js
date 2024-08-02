@@ -1,10 +1,9 @@
 // 送信処理
 const sendWord = async () => {
 	// Inputタグの中のテキストを取得
-	const nextWordInput = document.querySelector("#nextWordInput");
-	const nextWordInputText = nextWordInput.value;
+	const input = document.querySelector("#nextWordInput");
 
-	if (nextWordInputText === "") {
+	if (input.value === "") {
 		return;
 	}
 
@@ -14,23 +13,27 @@ const sendWord = async () => {
 
 	// UUIDをセッションストレージから取得
 	const uuid = sessionStorage.getItem("uuid");
+	const battleId = sessionStorage.getItem("battleId");
 
 	// POST
 	const response = await fetch(
-		_pathname,
+		"/multi",
 		{
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				"UUID": uuid
 			},
-			body: JSON.stringify({ nextWord: nextWordInputText })
+			body: JSON.stringify({
+				"nextWord": input.value,
+				"battleId": battleId
+			})
 		}
 	);
 
 	// エラー処理
 	if (response.status !== 200) {
-		const errorJson = await response.text();
+		const errorJson = await response.json();
 		const errorObj = JSON.parse(errorJson);
 		const message = errorObj["errorMessage"];
 
@@ -46,7 +49,7 @@ const sendWord = async () => {
 			//ゲームを終了するとき
 			case "2": {
 				if (confirm(message + "\nあなたの負けです。\nもう一度最初からしますか？")) {
-					reset();
+					// reset();
 				}
 				return;
 			}
@@ -54,33 +57,44 @@ const sendWord = async () => {
 			// UUIDのエラー
 			case "3":
 				alert(message + "\nゲームをリセットします");
-				await getUUID();
-				await reset();
+				// await getUUID();
+				// await reset();
 				return;
 
 			default:
 				return;
 		}
+	}else{
+		input.value = "";
 	}
-
-	// previousWord の更新
-	await changePrevWord(_pathname, uuid);
+	
+	//ターン,ワード表示
+	const turn = document.querySelector("#turn");
+	if (uuid === battleObj["turn"]) {
+		sendButton.disabled = false;
+		input.disabled = false;
+		turn.innerHTML = "あなたのターンです";
+		document.querySelector("#previousWord").innerHTML = `前の単語(相手):${battleObj["previousWord"]}`;
+		document.querySelector("#secondLastWord").innerHTML = `2つ前の単語(自分):${battleObj["secondLastWord"] === undefined ? "" : battleObj["secondLastWord"]}`;
+		addInitialLetter();
+	} else {
+		nextWordInput.value = "";
+		sendButton.disabled = true;
+		input.disabled = true;
+		turn.innerHTML = "あいてのターンです";
+		document.querySelector("#previousWord").innerHTML = `前の単語(自分):${battleObj["previousWord"]}`;
+		document.querySelector("#secondLastWord").innerHTML = `2つ前の単語(相手):${battleObj["secondLastWord"] === undefined ? "" : battleObj["secondLastWord"]}`;
+	}
 
 	//counterの更新
 	_updateCounter();
-
-	//頭文字の挿入
-	addInitialLetter();
-
-	// ボタンを有効にする
-	sendButton.disabled = false;
 }
 
 // 送信ボタンをクリックしたとき
-document.querySelector("#nextWordSendButton").onclick = sendWord;
+document.querySelector("#nextWordSendButton").addEventListener("onclick", async () => await sendWord());
 
 // 入力後にEnterを押したとき
-document.querySelector("#nextWordInput").addEventListener("keydown", (event) => {
+document.querySelector("#nextWordInput").addEventListener("keydown", async (event) => {
 	const sendButton = document.querySelector("#nextWordSendButton");
 
 	if (event.key === "Enter" && !sendButton.disabled) {
@@ -90,6 +104,6 @@ document.querySelector("#nextWordInput").addEventListener("keydown", (event) => 
 		}
 
 		event.preventDefault();
-		sendWord();
+		await sendWord();
 	}
 });

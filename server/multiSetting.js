@@ -10,20 +10,15 @@ const matchedMap = new Map();
 
 export async function search(uuid, request) {
 	const release = await mutex.acquire();
-
 	try {
-		console.log("battleMap");
-		console.log(battleMap);
-		console.log("waitingMap");
-		console.log(waitingMap);
-		console.log("matching");
-		console.log(matchedMap);
+		// console.log("battleMap");
+		// console.log(battleMap);
+		// console.log("waitingMap");
+		// console.log(waitingMap);
+		// console.log("matching");
+		// console.log(matchedMap);
 
 		const password = await request.headers.get("password");
-		console.log(password);
-
-
-		check(uuid, password);
 
 		// 自分が待っていて、相手が見つかった時
 		if (matchedMap.has(uuid)) {
@@ -109,8 +104,4 @@ export async function search(uuid, request) {
 	} finally {
 		release();
 	}
-}
-
-function check(uuid, password) {
-	console.log(`uuid = ${uuid}, password = ${password}`);
 }

@@ -16,7 +16,6 @@ onload = async (_event) => {
 		let response;
 		console.log(`battleId:${battleId}`);
 		while (1) {
-			await _sleep(1000);
 			response = await fetch(
 				"/update",
 				{
@@ -32,7 +31,7 @@ onload = async (_event) => {
 			);
 
 			const battleObj = await response.json();
-			console.log(battleObj);
+			// console.log(battleObj);
 			if (battleObj["exit"] == true) {
 				alert("勝負がついた")
 				location.href = "multiSetting.html"
@@ -49,7 +48,7 @@ onload = async (_event) => {
 				turn.innerHTML = "あなたのターンです";
 				document.querySelector("#previousWord").innerHTML = `前の単語(相手):${battleObj["previousWord"]}`;
 				document.querySelector("#secondLastWord").innerHTML = `2つ前の単語(自分):${battleObj["secondLastWord"] === undefined ? "" : battleObj["secondLastWord"]}`;
-				addInitialLetter();
+				if (document.querySelector("#nextWordInput").value === "") addInitialLetter();
 			} else {
 				sendButton.disabled = true;
 				input.disabled = true;
@@ -57,6 +56,7 @@ onload = async (_event) => {
 				document.querySelector("#previousWord").innerHTML = `前の単語(自分):${battleObj["previousWord"]}`;
 				document.querySelector("#secondLastWord").innerHTML = `2つ前の単語(相手):${battleObj["secondLastWord"] === undefined ? "" : battleObj["secondLastWord"]}`;
 			}
+			await _sleep(1000);
 		}
 	};
 }
