@@ -49,7 +49,7 @@ export async function validateNextWord(prevWord, nextWord, wordHistories) {
 		};
 	}
 
-	// 最後の文字が「ん」の時
+	// 最後の文字が「ん」��時
 	if (nextWord.slice(-1) === "ん") {
 		return {
 			isValid: false,
@@ -82,7 +82,6 @@ export async function validateNextWord(prevWord, nextWord, wordHistories) {
 	return { isValid: true };
 }
 
-
 // nextWordが実在する単語か判定する関数
 export function isValidWord(nextWord, result) {
 	// 結果データの中から単語をチェック
@@ -109,8 +108,6 @@ export function dicedeTurn(){
 		return false;
 	}
 }
-
-
 
 //battleIdを生成
 export function getBattleId() {

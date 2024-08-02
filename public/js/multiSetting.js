@@ -1,5 +1,4 @@
 
-
 onload = async (_event) => {
 	const selectedOpponent = sessionStorage.getItem("opponent");
 	const password = sessionStorage.getItem("password");
@@ -52,18 +51,17 @@ document.querySelector("#gameStart").addEventListener("click", async function ()
 				{
 					method: "POST",
 					headers: {
-						"Content-Type": "application/json",
 						"UUID": uuid,
 						"password": password
 					},
 				}
 			);
 			if (response.status !== 200) {
-				await sleep(1000);
+				await _sleep(1000);
 				continue;
 			} else {
 				const resText = await response.text();
-				const battelId = JSON.parse(resText)["battleId"];
+				const battelId = await JSON.parse(resText)["battleId"];
 				sessionStorage.setItem("battleId", battelId);
 				location.href = "/multi.html";
 				return;
@@ -87,10 +85,4 @@ function togglePasswordContainer(value) {
 	} else {
 		passwordContainer.style.display = "none";
 	}
-}
-
-
-// sleep関数
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
 }

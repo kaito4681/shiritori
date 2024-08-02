@@ -9,10 +9,8 @@
 	<link rel="stylesheet" href="/css/game.css">
 	<link rel="stylesheet" href="/css/toggleSwitch.css">
 	<script src="/js/main.js" defer></script>
-	<!-- <script src="/js/multi.js" defer></script> -->
-	<script src="/js/send.js" defer></script>
-	<script src="/js/reset.js" defer></script>
 	<script src="/js/toggleSwitch.js" defer></script>
+	<script src="js/multi.js"></script>
 
 </head>
 
@@ -21,14 +19,15 @@
 
 	<div id="mode">
 		<h2>対戦モード</h2>
-		<button id="returnSetting" class="menuButton">対戦相手を選び直す</button>
-		<button id="returnButton" class="menuButton">メニューに戻る</button>
+		<p id="secondLastWord"></p>
+		<p id="previousWord"></p>
 	</div>
 
 	<p id="previousWord"></p>
 	<input id="nextWordInput" type="text">
 	<button id="nextWordSendButton">送信</button>
 
+	<p id="turn"></p>
 	<p id="counter"></p>
 
 	<div id="toggleSwitch">

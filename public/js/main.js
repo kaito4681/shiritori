@@ -84,7 +84,7 @@ async function changePrevWord(pathname, uuid) {
 			return;
 		}
 	}
-	
+
 
 	const previousWordText = document.querySelector("#previousWord");
 	if (pathname === "/solo") {
@@ -124,9 +124,10 @@ function _resetCounter() {
 	countText.innerHTML = "続けた回数: 0回";
 }
 
-document.querySelector("#returnButton").addEventListener("click", function () {
-	if (confirm("メニューに戻りますか。\n")) {
-		location.href = "index.html";
-	}
-});
 
+
+
+// sleep関数
+function _sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}

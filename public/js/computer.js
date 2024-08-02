@@ -11,3 +11,9 @@ document.querySelector("#returnSetting").addEventListener("click", function () {
 		location.href = "./multiSetting.html";
 	}
 });
+
+document.querySelector("#returnButton").addEventListener("click", function () {
+	if (confirm("メニューに戻りますか。\n")) {
+		location.href = "index.html";
+	}
+});
