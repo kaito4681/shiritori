@@ -31,14 +31,13 @@ const sendWord = async () => {
 		}
 	);
 
+	const battleObj = await response.json();
 	// エラー処理
 	if (response.status !== 200) {
-		const errorJson = await response.json();
-		const errorObj = JSON.parse(errorJson);
-		const message = errorObj["errorMessage"];
+		const message = battleObj["errorMessage"];
 
 		//ゲーム終了にする時
-		switch (errorObj["errorCode"].slice(0, 1)) {
+		switch (battleObj["errorCode"].slice(0, 1)) {
 			// ゲームを続ける時
 			case "1": {
 				sendButton.disabled = false;
@@ -53,21 +52,14 @@ const sendWord = async () => {
 				}
 				return;
 			}
-
-			// UUIDのエラー
-			case "3":
-				alert(message + "\nゲームをリセットします");
-				// await getUUID();
-				// await reset();
-				return;
-
+			
 			default:
 				return;
 		}
-	}else{
+	} else {
 		input.value = "";
 	}
-	
+
 	//ターン,ワード表示
 	const turn = document.querySelector("#turn");
 	if (uuid === battleObj["turn"]) {
@@ -91,7 +83,7 @@ const sendWord = async () => {
 }
 
 // 送信ボタンをクリックしたとき
-document.querySelector("#nextWordSendButton").addEventListener("onclick", async () => await sendWord());
+document.querySelector("#nextWordSendButton").addEventListener("click", async () => await sendWord());
 
 // 入力後にEnterを押したとき
 document.querySelector("#nextWordInput").addEventListener("keydown", async (event) => {
