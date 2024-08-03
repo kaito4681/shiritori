@@ -47,12 +47,15 @@ const sendWord = async () => {
 
 			//ゲームを終了するとき
 			case "2": {
-				if (confirm(message + "\nあなたの負けです。\nもう一度最初からしますか？")) {
-					// reset();
-				}
+				alert(message + "\nあなたの負けです。\n5秒後に前の画面に戻ります。");
+				setTimeout(() => {
+					location.href = "multiSetting.html";
+				}, 5000);
 				return;
 			}
-			
+
+
+
 			default:
 				return;
 		}

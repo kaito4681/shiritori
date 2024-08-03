@@ -9,6 +9,8 @@ export async function update(request) {
 
 	if (battleId) {
 		const battle = battleMap.get(battleId);
+		console.log(battle);
+		
 		return new Response(
 			battle,
 			{
@@ -117,6 +119,20 @@ export async function post(request) {
 
 	//最後の文字が「ん」の時
 	if (nextWord.slice(-1) === "ん") {
+		battleMap.set(
+			battleId,
+			JSON.stringify(
+				{
+					uuid0: battle.uuid0,
+					uuid1: battle.uuid1,
+					turn: (battle.turn === battle.uuid0) ? battle.uuid1 : battle.uuid0,
+					exit: true,
+					previousWord: battle.previousWord,
+					secondLastWord: battle.secondLastWord,
+					wordHistories: battle.wordHistories
+				}
+			)
+		);
 		return new Response(
 			JSON.stringify({
 				"errorMessage": "最後の文字が「ん」になっています。",
@@ -131,8 +147,21 @@ export async function post(request) {
 
 	//過去に入力された単語のとき
 	const wordHistories = new Set(Object.keys(battle.wordHistories))
-	
 	if (wordHistories.has(nextWord)) {
+		battleMap.set(
+			battleId,
+			JSON.stringify(
+				{
+					uuid0: battle.uuid0,
+					uuid1: battle.uuid1,
+					turn: (battle.turn === battle.uuid0) ? battle.uuid1 : battle.uuid0,
+					exit: true,
+					previousWord: battle.previousWord,
+					secondLastWord: battle.secondLastWord,
+					wordHistories: battle.wordHistories
+				}
+			)
+		);
 		return new Response(
 			JSON.stringify({
 				"errorMessage": "過去に入力した単語が入力されました。",
@@ -170,6 +199,7 @@ export async function post(request) {
 	//ターン変更
 	const turn = (battle.turn === battle.uuid0) ? battle.uuid1 : battle.uuid0;
 
+	
 	battleMap.set(
 		battleId,
 		JSON.stringify(

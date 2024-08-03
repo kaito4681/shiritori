@@ -32,9 +32,15 @@ onload = async (_event) => {
 
 			const battleObj = await response.json();
 			// console.log(battleObj);
-			if (battleObj["exit"] == true) {
-				alert("勝負がついた")
-				location.href = "multiSetting.html"
+			// console.log(battleObj["exit"]);
+			if (battleObj["exit"] === true) {
+				winner = battleObj["turn"];
+				if (uuid === winner) {
+					alert("相手が「ん」で終わる単語、または、過去に使った単語を入力しました。\nあなたの勝ちです。\n5秒後に前の画面に戻ります。");
+				}
+				setTimeout(() => {
+					location.href = "multiSetting.html";
+				}, 5000);
 				return;
 			}
 
