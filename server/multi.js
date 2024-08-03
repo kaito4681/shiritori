@@ -9,7 +9,7 @@ export async function update(request) {
 
 	if (battleId) {
 		const battle = battleMap.get(battleId);
-		console.log(battle);
+		// console.log(battle);
 		
 		return new Response(
 			battle,
@@ -146,7 +146,7 @@ export async function post(request) {
 	}
 
 	//過去に入力された単語のとき
-	const wordHistories = new Set(Object.keys(battle.wordHistories))
+	const wordHistories = new Set(Object.keys(battle.wordHistories));
 	if (wordHistories.has(nextWord)) {
 		battleMap.set(
 			battleId,
@@ -210,7 +210,7 @@ export async function post(request) {
 				exit: false,
 				previousWord: nextWord,
 				secondLastWord: secondLastWord,
-				wordHistories: new Set(wordHistories)
+				wordHistories: Array.from(wordHistories)
 			}
 		)
 	);
