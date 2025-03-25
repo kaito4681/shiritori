@@ -1,7 +1,7 @@
 # しりとりゲーム
 
 ## 公開URL
-https://shiritori-deno.deno.dev
+https://shiritori-deno-vh0a8kmef1dy.deno.dev/
 
 
 ## 実行方法
