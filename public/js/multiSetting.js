@@ -101,3 +101,9 @@ function togglePasswordContainer(value) {
 		passwordContainer.style.display = "none";
 	}
 }
+
+document.querySelector("#returnButton").addEventListener("click", function () {
+	if (confirm("メニューに戻りますか。\n")) {
+		location.href = "index.html";
+	}
+});
