@@ -5,7 +5,10 @@ https://shiritori-deno.deno.dev
 
 
 ## 実行方法
-deno run --allow-net --allow-read --watch --allow-env server/main.js        
+```bash
+deno install
+deno task run
+``` 
   
 ## 実装したこと
 * ENTERで送信、ESCでリセット

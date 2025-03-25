@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "run": "deno run --allow-net --allow-read --watch --allow-env server/main.js"
+  },
+  "nodeModulesDir": "auto",
+  "imports": {
+    "cheerio": "npm:cheerio@1.0.0-rc.12",
+    "unofficial-jisho-api": "npm:unofficial-jisho-api@2.3.4"
+  }
+}
