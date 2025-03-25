@@ -34,7 +34,7 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "shiritori-deno"
+          project: "shiritori-deno-deploy"
           entrypoint: "server/main.js"
           root: ""
           
